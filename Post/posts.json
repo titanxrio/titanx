@@ -1,3 +1,7 @@
 {
-  "posts": ["firstpost.txt", "zweiterpost.txt"]
+  "posts": [
+    "firstpost.txt",
+    "secondpost.txt",
+    "hacking101.txt"
+  ]
 }
