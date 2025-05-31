@@ -3,54 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Titan Service – Forge the Impossible</title>
+<title>TITAN SERVICE – Welcome</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --accent:#00d4ff;
-  --dark:#0e0e0e;
-  --card:#181818;
-}
-*{box-sizing:border-box;padding:0;margin:0;scroll-behavior:smooth;}
+:root{--accent:#00d4ff;--dark:#0e0e0e;--card:#181818;}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
 body{font-family:'Poppins',sans-serif;background:var(--dark);color:#fff;overflow-x:hidden;}
 
-/* ---------- NAV ---------- */
-header{position:fixed;top:0;width:100%;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;z-index:1000;background:rgba(14,14,14,.55);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.05);}
+/* NAV */
+header{position:fixed;top:0;width:100%;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;background:rgba(14,14,14,.55);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.05);z-index:1000;}
 header h1{font-size:1.8rem;font-weight:800;letter-spacing:1px;}
 nav a{margin-left:28px;color:#fff;text-decoration:none;font-weight:600;position:relative;transition:.3s;}
 nav a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--accent);transition:.3s;}
 nav a:hover{color:var(--accent);}nav a:hover::after{width:100%;}
 
-/* ---------- HERO ---------- */
+/* HERO */
 .hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 20px;background:linear-gradient(135deg,#0f0f0f,#171717);} 
-.hero h2{font-size:3.2rem;font-weight:800;margin-bottom:14px;animation:fadeSlide 1s .3s both;}
-.hero p{max-width:640px;font-size:1.1rem;line-height:1.6;margin-bottom:38px;animation:fadeSlide 1s .6s both;}
+.hero h2{font-size:3.4rem;font-weight:800;margin-bottom:16px;animation:fadeSlide 1s .3s both;}
+.hero p{max-width:640px;font-size:1.1rem;line-height:1.6;margin-bottom:42px;animation:fadeSlide 1s .6s both;}
 @keyframes fadeSlide{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
-.btn{display:inline-block;padding:14px 40px;border:2px solid var(--accent);border-radius:50px;color:#fff;text-decoration:none;text-transform:uppercase;font-weight:700;transition:.35s;animation:fadeSlide 1s .9s both;}
-.btn:hover{background:var(--accent);color:#000;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,212,255,.35);}
-.scrolldown{position:absolute;bottom:32px;font-size:.85rem;animation:bounce 2s infinite ease-in-out;}@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-8px);}60%{transform:translateY(-4px);}}
+.btn{display:inline-block;padding:14px 46px;border:2px solid var(--accent);border-radius:50px;color:#fff;text-decoration:none;text-transform:uppercase;font-weight:700;transition:.35s;animation:fadeSlide 1s .9s both;}
+.btn:hover{background:var(--accent);color:#000;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,212,255,.35);} 
+.scrolldown{position:absolute;bottom:32px;font-size:.85rem;animation:bounce 2s infinite ease-in-out;}@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-8px);}60%{transform:translateY(-4px);} }
 
-/* ---------- I CODE SECTION ---------- */
-#icode{padding:120px 20px 60px;background:#111;}
-#icode h2{font-size:2.6rem;font-weight:800;text-align:center;margin-bottom:50px;}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;max-width:1100px;margin:0 auto;}
-.card{background:var(--card);padding:36px 30px;border-radius:26px;box-shadow:0 12px 26px rgba(0,0,0,.4);text-align:center;transition:.4s ease;opacity:0;transform:translateY(30px);} 
+/* GENERIC SECTION */
+section{padding:120px 20px 80px;}
+section h2{font-size:2.6rem;font-weight:800;text-align:center;margin-bottom:50px;}
+
+/* CARDS GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;max-width:1100px;margin:0 auto;}
+.card{background:var(--card);padding:34px 28px;border-radius:26px;text-align:center;box-shadow:0 12px 26px rgba(0,0,0,.4);transition:.4s;opacity:0;transform:translateY(30px);} 
 .card.visible{opacity:1;transform:none;}
 .card h3{font-size:1.6rem;font-weight:700;margin-bottom:12px;color:var(--accent);} 
 .card p{opacity:.85;font-size:.95rem;line-height:1.5;}
 .card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 14px 32px rgba(0,212,255,.15);} 
 
-/* ---------- POSTS ---------- */
-#posts{padding:120px 20px 80px;background:#0e0e0e;min-height:100vh;}
-#posts h2{font-size:2.5rem;text-align:center;margin-bottom:50px;font-weight:800;}
-.post{max-width:850px;margin:40px auto;background:var(--card);padding:34px 42px;border-radius:26px;box-shadow:0 12px 28px rgba(0,0,0,.45);opacity:0;transform:translateY(30px);transition:.6s ease;}
-.post.visible{opacity:1;transform:none;}
-.post h3{margin-top:0;font-size:1.9rem;color:var(--accent);} 
-.post pre{white-space:pre-wrap;font-family:inherit;line-height:1.65;}
+/* CTA */
+#cta{background:#111;text-align:center;}
+#cta a{display:inline-block;margin-top:10px;padding:16px 50px;border-radius:50px;border:2px solid var(--accent);font-weight:700;color:#fff;text-decoration:none;transition:.35s;}
+#cta a:hover{background:var(--accent);color:#000;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,212,255,.35);} 
 
-/* ---------- FOOTER ---------- */
 footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;color:#777;}
 </style>
 </head>
@@ -59,97 +53,65 @@ footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;colo
   <h1>TITAN SERVICE</h1>
   <nav>
     <a href="#home">Home</a>
+    <a href="#about">About</a>
     <a href="#icode">I&nbsp;Code</a>
-    <a href="#posts">Posts</a>
+    <a href="posts.html">Posts</a>
   </nav>
 </header>
 
-<!-- HERO / HOME -->
+<!-- HERO -->
 <section class="hero" id="home">
-  <h2>Code Like a Titan</h2>
-  <p>Titan Service forges invincible software, unleashes supreme Discord bots, and hijacks SDR frequencies for fun and education. Step into the arena.</p>
-  <a href="#icode" class="btn">Show&nbsp;Me&nbsp;The&nbsp;Power</a>
+  <h2>Welcome to TITAN</h2>
+  <p>Unleashing invincible software, bending SDR frequencies, and crafting the wildest pentesting tools. Dive into the realm of limitless creation.</p>
+  <a href="#about" class="btn">Show&nbsp;Me&nbsp;More</a>
   <span class="scrolldown">▼ Scroll</span>
+</section>
+
+<!-- ABOUT / PASSIONS -->
+<section id="about">
+  <h2>What&nbsp;Drives&nbsp;Me</h2>
+  <div class="grid" id="about-grid"></div>
 </section>
 
 <!-- I CODE SECTION -->
 <section id="icode">
-  <h2>I&nbsp;Code&nbsp;:</h2>
-  <div class="cards" id="card-container">
-    <!-- Cards injected by JS -->
-  </div>
+  <h2>What&nbsp;I&nbsp;Code</h2>
+  <div class="grid" id="code-grid"></div>
 </section>
 
-<!-- POSTS -->
-<section id="posts">
-  <h2>Educational Arsenal</h2>
-  <div id="posts-container"></div>
+<!-- CTA TO POSTS -->
+<section id="cta">
+  <h2>Ready for Deep-Dive Tutorials?</h2>
+  <a href="posts.html">See&nbsp;Posts</a>
 </section>
 
-<footer>
-  © <span id="year"></span> Titan Service. All rights reserved.
-</footer>
+<footer>© <span id="year"></span> Titan Service. All rights reserved.</footer>
 
 <script>
 // YEAR
-const yearEl=document.getElementById('year');yearEl.textContent=new Date().getFullYear();
+document.getElementById('year').textContent=new Date().getFullYear();
 
-// CARD DATA
-const cards=[
-  {title:"Discord Bots",desc:"Power-packed, feature-rich bots that dominate every server."},
-  {title:"Discord Tools",desc:"From mass-DM beasts to sleek verification systems – pure dominance."},
-  {title:"Other Tools",desc:"Stealth recon scripts, SDR hacking utilities, and beyond."}
+// Intersection reveal
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.15});
+
+// ABOUT DATA
+const passions=[
+ {title:'SDR Hacking',desc:'Sniffing & injecting radio frequencies like a maestro.'},
+ {title:'NFC Wizardry',desc:'Tag cloning, payment fuzzing & smart-card sorcery.'},
+ {title:'Pentesting',desc:'Red-team exploits, recon scripts, and relentless fuzz.'},
+ {title:'Hardware Crafting',desc:'From 3D-printed cases to antenna builds – pure creation.'}
 ];
+passions.forEach(p=>injectCard('about-grid',p));
 
-// Render cards
-const cardWrap=document.getElementById('card-container');cards.forEach(c=>{
-  const div=document.createElement('div');div.className='card';div.innerHTML=`<h3>${c.title}</h3><p>${c.desc}</p>`;cardWrap.appendChild(div);
-});
+// CODE DATA
+const codes=[
+ {title:'Discord Bots',desc:'Feature-rich guardians & utility overlords.'},
+ {title:'Discord Tools',desc:'Mass-DM, verification, queue systems – domination.'},
+ {title:'Recon Utilities',desc:'Stealth info-gathering with zero footprint.'}
+];
+codes.forEach(c=>injectCard('code-grid',c));
 
-// ------- SCROLL REVEAL -------
-const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}})},{threshold:.15});
-
-[...document.querySelectorAll('.card')].forEach(el=>observer.observe(el));
-
-// POSTS HANDLER
-async function loadPosts(){
-  let files=[];
-  // Try posts.json first (reliable on most static hosts)
-  try{
-    const listRes=await fetch('Post/posts.json');
-    if(listRes.ok){const data=await listRes.json();files=data.posts||[];}
-  }catch{console.warn('posts.json missing – fallback to directory scrape');}
-
-  // Fallback: scrape directory index (works only if listing enabled)
-  if(files.length===0){
-    try{
-      const indexRes=await fetch('Post/');
-      if(indexRes.ok){
-        const html=await indexRes.text();
-        const doc=new DOMParser().parseFromString(html,'text/html');
-        files=[...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')).filter(h=>h.endsWith('.txt'));
-      }
-    }catch(e){console.error(e);}
-  }
-
-  if(files.length===0){document.getElementById('posts-container').innerHTML='<p style="text-align:center;">No posts available.</p>';return;}
-
-  for(const file of files){
-    try{
-      const txt=await (await fetch('Post/'+file)).text();
-      renderPost(file.replace('.txt',''),txt);
-    }catch(e){console.error(e);}
-  }
-  // Animate reveal
-  document.querySelectorAll('.post').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*120));
-}
-
-function renderPost(title,content){
-  const art=document.createElement('article');art.className='post';art.innerHTML=`<h3>${title}</h3><pre>${escapeHtml(content)}</pre>`;document.getElementById('posts-container').appendChild(art);observer.observe(art);
-}
-function escapeHtml(str){return str.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
-
-document.addEventListener('DOMContentLoaded',loadPosts);
+function injectCard(containerId,obj){const div=document.createElement('div');div.className='card';div.innerHTML=`<h3>${obj.title}</h3><p>${obj.desc}</p>`;document.getElementById(containerId).appendChild(div);obs.observe(div);} 
 </script>
 </body>
 </html>
