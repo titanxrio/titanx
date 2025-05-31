@@ -1,0 +1,9 @@
+To exploit the vulnerability you needs physical access or gain access to encrypted data, Plus, you’d better know the “TPM PIN” if it’s configured, which is often the case. This vulnerability particularly messes with systems that have a “TPM” in “transparent mode,” which, coincidentally, is the default setting.
+
+At time of The release, a researcher published the findings about the vulnerability on Mastodon 27. Based on the post, This how you would exploit this vulnerability, You Start by creating a raw copy of the encrypted drive. access the system’s recovery mode, Once in recovery mode, then initiates the “Reset this PC” process, selecting “Remove everything,” followed by “Local reinstall” and “Just remove my files.” During the subsequent reboot, Next deliberately powers off the machine when the “Resetting this PC” process reaches around 98%, approximately when BitLocker start its decryption.
+
+now once the machine power again, it automatically enters recovery mode and displays an error. After the error message, Windows reboots and shows an installation progress screen. At this point, open a command prompt. The system drive remains unlocked, allowing to pause the decryption with the manage-bde -pause C:
+
+Despite the possibility of the machine rebooting automatically, this is not a problem. As the Windows installation proceeds, you can just press Shift+F10 again on the first page to open a new command prompt. and grants access to the recovery password or the option to extract keys from memory.
+
+With the recovery password or master key obtained, the attacker can decrypt the initially copied disk, ultimately you can now bypass Bitlocker.
