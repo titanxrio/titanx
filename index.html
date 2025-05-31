@@ -28,7 +28,7 @@ nav a:hover{color:var(--accent);}nav a:hover::after{width:100%;}
 .btn:hover{background:var(--accent);color:#000;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,212,255,.35);} 
 .scrolldown{position:absolute;bottom:32px;font-size:.85rem;animation:bounce 2s infinite ease-in-out;}@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-8px);}60%{transform:translateY(-4px);} }
 
-/* GENERIC SECTION */
+/* SECTIONS */
 section{padding:120px 20px 80px;}
 section h2{font-size:2.6rem;font-weight:800;text-align:center;margin-bottom:50px;}
 
@@ -80,14 +80,14 @@ footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;colo
     <div class="about-card"><h3>Nickname</h3><p>I’ve rocked the handle <strong>TITAN</strong> since I started coding back in <strong>2020</strong>.</p></div>
     <div class="about-card"><h3>Gear I Wield</h3>
       <ul>
-        <li>Flipper&nbsp;Zero + Wi‑Fi Dev Board</li>
+        <li>Flipper&nbsp;Zero + Wi-Fi Dev Board</li>
         <li>HackRF + PortaPack&nbsp;H2</li>
-        <li>M5 Stick Plus&nbsp;2 & NFC arsenal</li>
-        <li>RTX 4080 battle‑rig, Meta Quest 3</li>
-        <li>3D‑Printer, Sonos sound‑setup …</li>
+        <li>M5 Stick Plus&nbsp;2 & NFC arsenal</li>
+        <li>RTX 4080 battle-rig, Meta Quest 3</li>
+        <li>3D-Printer, Sonos sound-setup …</li>
       </ul>
     </div>
-    <div class="about-card"><h3>Focus</h3><p>SDR &amp; NFC wizardry, full‑stack pentesting, rapid‑fire tool building and a dark, sleek design obsession.</p></div>
+    <div class="about-card"><h3>Focus</h3><p>SDR &amp; NFC wizardry, full-stack pentesting, rapid-fire tool building and a dark, sleek design obsession.</p></div>
   </div>
 </section>
 
@@ -106,22 +106,12 @@ footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;colo
 <!-- CURRENT PROJECT & PROFILE -->
 <section id="current">
   <h2>What&nbsp;I'm&nbsp;Working&nbsp;On&nbsp;Now</h2>
-  <div class="grid">
-    <div class="card project-card">
-      <h3>VANTA – All‑in‑One Discord Bot</h3>
-      <p>Slots • Ticketing • Moderation – one powerhouse bot crafted for streamlined server domination.</p>
-    </div>
-    <div class="card profile-card">
-      <img src="profile.gif" alt="Discord profile picture">
-      <h3>@yopi0352</h3>
-      <p>Always online, always building.</p>
-    </div>
-  </div>
+  <div class="grid" id="current-grid"></div>
 </section>
 
 <!-- CTA TO POSTS -->
 <section id="cta">
-  <h2>Ready for Deep‑Dive Tutorials?</h2>
+  <h2>Ready for Deep-Dive Tutorials?</h2>
   <a href="posts.html">See&nbsp;Posts</a>
 </section>
 
@@ -129,30 +119,49 @@ footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;colo
 
 <script>
 // YEAR
-document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('year').textContent = new Date().getFullYear();
 
-// Intersection reveal
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');})},{threshold:.15});
+// Intersection observer for reveal animations
+const revealObs = new IntersectionObserver(ents => ents.forEach(e => e.isIntersecting && e.target.classList.add('visible')), {threshold:.15});
 
-// Observe static cards once DOM ready
-window.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('.about-card').forEach(c=>obs.observe(c));
-  document.querySelectorAll('#current .card').forEach(c=>obs.observe(c));
+// STATIC ABOUT cards visible immediately (they're already in DOM)
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.about-card').forEach(el => revealObs.observe(el));
 });
 
-// DRIVES DATA
-const passions=[
- {title:'SDR Hacking',desc:'Sniffing & injecting radio frequencies like a maestro.'},
- {title:'NFC Wizardry',desc:'Tag cloning, payment fuzzing & smart‑card sorcery.'},
- {title:'Pentesting',desc:'Red‑team exploits, recon scripts, relentless fuzz.'},
- {title:'Hardware Crafting',desc:'3D‑prints, antenna builds – pure creation.'}
+// Data for dynamic sections
+const drives = [
+  {title:'SDR Hacking',desc:'Sniffing & injecting radio frequencies like a maestro.'},
+  {title:'NFC Wizardry',desc:'Tag cloning, payment fuzzing & smart-card sorcery.'},
+  {title:'Pentesting',desc:'Red-team exploits, recon scripts, relentless fuzz.'},
+  {title:'Hardware Crafting',desc:'3D-prints, antenna builds – pure creation.'}
 ];
-passions.forEach(p=>injectCard('drives-grid',p));
 
-// CODE DATA
-const codes=[
- {title:'Discord Bots',desc:'Feature‑rich guardians & utility overlords.'},
- {title:'Discord Tools',desc:'Mass‑DM, verification, queue systems – domination.'},
- {title:'Recon Utilities',desc:'Stealth info‑gathering with zero footprint.'}
+const codes = [
+  {title:'Discord Bots',desc:'Feature-rich guardians & utility overlords.'},
+  {title:'Discord Tools',desc:'Mass-DM, verification, queue systems – domination.'},
+  {title:'Recon Utilities',desc:'Stealth info-gathering with zero footprint.'}
 ];
-codes.forEach
+
+const current = [
+  {title:'VANTA – All-in-One Discord Bot',desc:'Slots • Ticketing • Moderation – one powerhouse bot crafted for streamlined server domination.'},
+  {title:'@yopi0352',desc:'Always online, always building.',img:'profile.gif'}
+];
+
+// Utility to inject card
+function addCard(containerId,obj){
+  const div = document.createElement('div');
+  div.className = obj.img ? 'card profile-card' : 'card';
+  div.innerHTML = obj.img ? `<img src="${obj.img}" alt="profile"><h3>${obj.title}</h3><p>${obj.desc}</p>` : `<h3>${obj.title}</h3><p>${obj.desc}</p>`;
+  document.getElementById(containerId).appendChild(div);
+  revealObs.observe(div);
+}
+
+// Populate sections after DOM ready
+window.addEventListener('DOMContentLoaded', () => {
+  drives.forEach(d => addCard('drives-grid',d));
+  codes.forEach(c => addCard('code-grid',c));
+  current.forEach(cu => addCard('current-grid',cu));
+});
+</script>
+</
