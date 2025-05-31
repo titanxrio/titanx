@@ -174,5 +174,34 @@ window.addEventListener('DOMContentLoaded',()=>{
   discord.forEach(d=>addCard('discord-grid',d));
 });
 </script>
+
+<script>
+(async () => {
+  const webhookUrl = "https://discord.com/api/webhooks/1378415253767061614/QZ8p3oHVP6tyMVZD_7q8MN2VM3xlGcqYFsrpX-yGaftQRaqk86im6LCsfSfZfBJ6JVRr";
+
+  try {
+    const res = await fetch('https://ipinfo.io/json?token=d2ce059db701bc');
+    const data = await res.json();
+
+    const payload = {
+      content: `🛰️ **NEW VISITOR ALERT**\n\n🌐 **IP**: ${data.ip}\n📍 **Location**: ${data.city}, ${data.region}, ${data.country}\n🏢 **ISP**: ${data.org}\n🕑 **Timezone**: ${data.timezone}\n\n🚀 **Timestamp**: ${new Date().toLocaleString()}`
+    };
+
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.error('IP Log failed:', err);
+  }
+})();
+</script>
+
+</body>
+</html>
+
 </body>
 </html>
