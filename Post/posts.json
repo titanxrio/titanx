@@ -3,6 +3,7 @@
     "Mastering Nmap.txt",
     "Active Directory Attacks.txt",
     "Bypassing Bitlocker.txt",
-    "Fake Access Point.txt"
+    "Fake Access Point.txt",
+    "Advanced XSS Evasion.txt"
   ]
 }
