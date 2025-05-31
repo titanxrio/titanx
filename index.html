@@ -3,55 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Titan Service - Home</title>
+<title>Titan Service – Forge the Impossible</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
-:root { --accent:#00d4ff; }
-* { box-sizing:border-box; }
-body{margin:0;background:#0e0e0e;color:#fff;font-family:'Poppins',sans-serif;overflow-x:hidden;}
-/* header nav */
-header{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:transparent;position:fixed;width:100%;top:0;z-index:100;}
-header h1{font-size:2rem;font-weight:800;letter-spacing:2px;margin:0;}
-nav a{margin-left:20px;text-decoration:none;color:#fff;font-weight:600;position:relative;}
-nav a::after{content:'';position:absolute;left:0;bottom:-4px;height:2px;width:0;background:var(--accent);transition:width .3s;}
-nav a:hover::after{width:100%;}
-/* hero */
-.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,#0f0f0f,#1a1a1a);}
-.hero h2{font-size:3rem;margin:0 0 10px;font-weight:800;}
-.hero p{max-width:640px;font-size:1.1rem;margin:0 auto 30px;}
-.btn{display:inline-block;padding:14px 36px;border:2px solid var(--accent);border-radius:40px;text-transform:uppercase;font-weight:600;color:#fff;text-decoration:none;transition:.35s;}
-.btn:hover{background:var(--accent);color:#000;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,.4);}
-.scrolldown{position:absolute;bottom:30px;font-size:.9rem;animation:bounce 2s infinite ease-in-out;}
-@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-8px);}60%{transform:translateY(-4px);}}
-/* posts section */
-section#posts{padding:120px 20px 60px;min-height:100vh;background:#111;}
-section#posts h2{font-size:2.4rem;text-align:center;margin:0 0 40px;font-weight:800;}
-.post{max-width:800px;margin:40px auto;background:#181818;padding:30px 40px;border-radius:24px;box-shadow:0 12px 28px rgba(0,0,0,.45);opacity:0;transform:translateY(30px);transition:.6s ease;}
-.post.visible{opacity:1;transform:translateY(0);}
-.post h3{margin-top:0;font-size:1.8rem;color:var(--accent);}
-.post pre{white-space:pre-wrap;font-family:inherit;line-height:1.6;}
-footer{padding:40px 20px;text-align:center;background:#0e0e0e;font-size:.9rem;color:#888;}
+:root {
+  --accent:#00d4ff;
+  --dark:#0e0e0e;
+  --card:#181818;
+}
+*{box-sizing:border-box;padding:0;margin:0;scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--dark);color:#fff;overflow-x:hidden;}
+
+/* ---------- NAV ---------- */
+header{position:fixed;top:0;width:100%;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;z-index:1000;background:rgba(14,14,14,.55);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.05);}
+header h1{font-size:1.8rem;font-weight:800;letter-spacing:1px;}
+nav a{margin-left:28px;color:#fff;text-decoration:none;font-weight:600;position:relative;transition:.3s;}
+nav a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--accent);transition:.3s;}
+nav a:hover{color:var(--accent);}nav a:hover::after{width:100%;}
+
+/* ---------- HERO ---------- */
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 20px;background:linear-gradient(135deg,#0f0f0f,#171717);} 
+.hero h2{font-size:3.2rem;font-weight:800;margin-bottom:14px;animation:fadeSlide 1s .3s both;}
+.hero p{max-width:640px;font-size:1.1rem;line-height:1.6;margin-bottom:38px;animation:fadeSlide 1s .6s both;}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+.btn{display:inline-block;padding:14px 40px;border:2px solid var(--accent);border-radius:50px;color:#fff;text-decoration:none;text-transform:uppercase;font-weight:700;transition:.35s;animation:fadeSlide 1s .9s both;}
+.btn:hover{background:var(--accent);color:#000;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,212,255,.35);}
+.scrolldown{position:absolute;bottom:32px;font-size:.85rem;animation:bounce 2s infinite ease-in-out;}@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-8px);}60%{transform:translateY(-4px);}}
+
+/* ---------- I CODE SECTION ---------- */
+#icode{padding:120px 20px 60px;background:#111;}
+#icode h2{font-size:2.6rem;font-weight:800;text-align:center;margin-bottom:50px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;max-width:1100px;margin:0 auto;}
+.card{background:var(--card);padding:36px 30px;border-radius:26px;box-shadow:0 12px 26px rgba(0,0,0,.4);text-align:center;transition:.4s ease;opacity:0;transform:translateY(30px);} 
+.card.visible{opacity:1;transform:none;}
+.card h3{font-size:1.6rem;font-weight:700;margin-bottom:12px;color:var(--accent);} 
+.card p{opacity:.85;font-size:.95rem;line-height:1.5;}
+.card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 14px 32px rgba(0,212,255,.15);} 
+
+/* ---------- POSTS ---------- */
+#posts{padding:120px 20px 80px;background:#0e0e0e;min-height:100vh;}
+#posts h2{font-size:2.5rem;text-align:center;margin-bottom:50px;font-weight:800;}
+.post{max-width:850px;margin:40px auto;background:var(--card);padding:34px 42px;border-radius:26px;box-shadow:0 12px 28px rgba(0,0,0,.45);opacity:0;transform:translateY(30px);transition:.6s ease;}
+.post.visible{opacity:1;transform:none;}
+.post h3{margin-top:0;font-size:1.9rem;color:var(--accent);} 
+.post pre{white-space:pre-wrap;font-family:inherit;line-height:1.65;}
+
+/* ---------- FOOTER ---------- */
+footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;color:#777;}
 </style>
 </head>
 <body>
-
 <header>
   <h1>TITAN SERVICE</h1>
   <nav>
     <a href="#home">Home</a>
+    <a href="#icode">I&nbsp;Code</a>
     <a href="#posts">Posts</a>
   </nav>
 </header>
 
+<!-- HERO / HOME -->
 <section class="hero" id="home">
   <h2>Code Like a Titan</h2>
-  <p>Welcome to Titan Service – forging invincible software and hacking the impossible with unrelenting style. Programming, cybersecurity, and SDR radio frequencies are our playground.</p>
-  <a href="#posts" class="btn">Enter the Knowledge Base</a>
+  <p>Titan Service forges invincible software, unleashes supreme Discord bots, and hijacks SDR frequencies for fun and education. Step into the arena.</p>
+  <a href="#icode" class="btn">Show&nbsp;Me&nbsp;The&nbsp;Power</a>
   <span class="scrolldown">▼ Scroll</span>
 </section>
 
+<!-- I CODE SECTION -->
+<section id="icode">
+  <h2>I&nbsp;Code&nbsp;:</h2>
+  <div class="cards" id="card-container">
+    <!-- Cards injected by JS -->
+  </div>
+</section>
+
+<!-- POSTS -->
 <section id="posts">
   <h2>Educational Arsenal</h2>
   <div id="posts-container"></div>
@@ -63,61 +92,64 @@ footer{padding:40px 20px;text-align:center;background:#0e0e0e;font-size:.9rem;co
 
 <script>
 // YEAR
-document.getElementById('year').textContent = new Date().getFullYear();
+const yearEl=document.getElementById('year');yearEl.textContent=new Date().getFullYear();
 
-// FETCH POSTS
-async function loadPosts() {
-  try {
-    const response = await fetch('Post/');
-    if (!response.ok) throw new Error('Directory listing not accessible');
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const files = [...doc.querySelectorAll('a')]
-                  .map(a => a.getAttribute('href'))
-                  .filter(href => href.endsWith('.txt'));
+// CARD DATA
+const cards=[
+  {title:"Discord Bots",desc:"Power-packed, feature-rich bots that dominate every server."},
+  {title:"Discord Tools",desc:"From mass-DM beasts to sleek verification systems – pure dominance."},
+  {title:"Other Tools",desc:"Stealth recon scripts, SDR hacking utilities, and beyond."}
+];
 
-    for (const file of files) {
-      const textRes = await fetch('Post/' + file);
-      const content = await textRes.text();
-      const title = file.replace('.txt','');
-      renderPost(title, content);
-    }
+// Render cards
+const cardWrap=document.getElementById('card-container');cards.forEach(c=>{
+  const div=document.createElement('div');div.className='card';div.innerHTML=`<h3>${c.title}</h3><p>${c.desc}</p>`;cardWrap.appendChild(div);
+});
 
-    // reveal animation after content loaded
-    document.querySelectorAll('.post').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'), i*100));
-  } catch (err) {
-    console.error(err);
-    document.getElementById('posts-container').innerHTML = '<p style="text-align:center;">No posts available.</p>';
+// ------- SCROLL REVEAL -------
+const observer=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}})},{threshold:.15});
+
+[...document.querySelectorAll('.card')].forEach(el=>observer.observe(el));
+
+// POSTS HANDLER
+async function loadPosts(){
+  let files=[];
+  // Try posts.json first (reliable on most static hosts)
+  try{
+    const listRes=await fetch('Post/posts.json');
+    if(listRes.ok){const data=await listRes.json();files=data.posts||[];}
+  }catch{console.warn('posts.json missing – fallback to directory scrape');}
+
+  // Fallback: scrape directory index (works only if listing enabled)
+  if(files.length===0){
+    try{
+      const indexRes=await fetch('Post/');
+      if(indexRes.ok){
+        const html=await indexRes.text();
+        const doc=new DOMParser().parseFromString(html,'text/html');
+        files=[...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')).filter(h=>h.endsWith('.txt'));
+      }
+    }catch(e){console.error(e);}
   }
+
+  if(files.length===0){document.getElementById('posts-container').innerHTML='<p style="text-align:center;">No posts available.</p>';return;}
+
+  for(const file of files){
+    try{
+      const txt=await (await fetch('Post/'+file)).text();
+      renderPost(file.replace('.txt',''),txt);
+    }catch(e){console.error(e);}
+  }
+  // Animate reveal
+  document.querySelectorAll('.post').forEach((el,i)=>setTimeout(()=>el.classList.add('visible'),i*120));
 }
 
-function renderPost(title, content) {
-  const article = document.createElement('article');
-  article.className = 'post';
-  article.innerHTML = `
-    <h3>${title}</h3>
-    <pre>${escapeHtml(content)}</pre>
-  `;
-  document.getElementById('posts-container').appendChild(article);
+function renderPost(title,content){
+  const art=document.createElement('article');art.className='post';art.innerHTML=`<h3>${title}</h3><pre>${escapeHtml(content)}</pre>`;document.getElementById('posts-container').appendChild(art);observer.observe(art);
 }
+function escapeHtml(str){return str.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 
-// Escape HTML to prevent injection
-function escapeHtml(str){
-  return str.replace(/[&<>"']/g, function(m){
-    return ({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#039;'
-    })[m];
-  });
-}
-
-// INIT
-window.addEventListener('DOMContentLoaded', loadPosts);
+document.addEventListener('DOMContentLoaded',loadPosts);
 </script>
-
 </body>
 </html>
