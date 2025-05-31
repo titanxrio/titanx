@@ -1,0 +1,74 @@
+🎩 Trusted Types Bypass & iframe Sandbox Escapes - Advanced XSS Evasion​
+
+As browsers evolve, so do defenses. Trusted Types and iframe sandboxing are two powerful anti-XSS mechanisms — but under the right conditions, they can still be bypassed.
+
+This bonus guide explores two advanced XSS evasion paths that few attackers exploit but every Red Teamer should understand.
+
+🔓 Trusted Types Bypass​
+
+Trusted Types is a browser-enforced defense that prevents DOM XSS by requiring special objects for sinks like `innerHTML`, `eval`, and `setTimeout`.
+
+If enabled correctly, these prevent direct string-based injections:
+
+document.body.innerHTML = "<script>alert(1)</script>"; // Blocked
+
+
+But Trusted Types only protect specific sinks:​
+
+✅ `innerHTML`, `outerHTML`, `insertAdjacentHTML`
+✅ `setTimeout`, `setInterval`
+✅ `eval`, `Function`, `script.src`, etc.
+
+Still vulnerable:
+
+❌ `srcdoc`, `iframe.contentWindow.document.write()`
+❌ WebComponent APIs, custom render engines
+❌ If developers override policies or whitelist unsafe functions
+
+Bypass via Legacy Functions:​
+If an app uses outdated or non-standard render logic:
+JavaScript:
+customRenderer.setContent(userInput); // No Trusted Types enforcement
+
+Or if a library wraps `innerHTML` and disables Trusted Types:
+JavaScript:
+element.innerHTML = String(userInput); // Wrapper disables TT policy
+
+Bypass Payload:​
+<svg onload=alert(document.domain)>
+
+Mitigation Tips:​
+
+✅ Enforce Trusted Types in strict mode:
+Content-Security-Policy: require-trusted-types-for 'script';
+✅ Avoid 3rd-party libraries that bypass policies
+✅ Use DOMPurify in Trusted Types mode:
+DOMPurify.sanitize(input, {RETURN_TRUSTED_TYPE: true})
+
+🚪 iframe Sandbox Escape​
+
+Sandboxing iframes is meant to isolate risky content. But **misconfigured attributes** can leak access or allow script execution.
+
+The Dangerous Combo:​
+HTML:
+<iframe src="evil.html" sandbox="allow-scripts allow-same-origin"></iframe>
+
+This breaks the origin isolation. Now the iframe can:
+
+✅ Read/write cookies
+✅ Access `localStorage`
+✅ Inject and run JavaScript
+
+Real Exploit Example:​
+Attacker loads `evil.html` in sandboxed iframe with both `allow-scripts` and `allow-same-origin`. They then abuse the iframe to access or overwrite parent app data — or open a secondary vector like `postMessage`.
+
+Mitigation Tips:​
+
+✅ Never combine `allow-scripts` and `allow-same-origin`
+✅ Use `sandbox="allow-scripts"` or `sandbox="allow-same-origin"`, but not both
+✅ For untrusted content, use `sandbox=""` with no permissions
+✅ Combine with `CSP: frame-ancestors 'none'` to prevent embedding
+
+📌 Final Thoughts​
+
+Trusted Types and iframe sandboxing are excellent defenses — but they’re not bulletproof. Weak implementations, legacy code, or misconfigured policies can open cracks for attackers to slip through.
