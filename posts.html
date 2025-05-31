@@ -15,7 +15,7 @@ body{font-family:'Poppins',sans-serif;background:var(--dark);color:#fff;overflow
 header{position:fixed;top:0;width:100%;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;background:rgba(14,14,14,.55);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.05);z-index:1000;}
 header h1{font-size:1.6rem;font-weight:800;letter-spacing:1px;}
 nav a{margin-left:24px;color:#fff;text-decoration:none;font-weight:600;position:relative;transition:.3s;}
-nav a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--accent);transition:.3s;}
+nav a::after{content:\"\";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--accent);transition:.3s;}
 nav a:hover{color:var(--accent);}nav a:hover::after{width:100%;}
 
 section{padding:120px 20px 80px;}
@@ -46,31 +46,71 @@ footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;colo
 
 <script>
 // YEAR
-document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('year').textContent = new Date().getFullYear();
 
-// LIST POSTS
-document.addEventListener('DOMContentLoaded',loadPosts);
-async function loadPosts(){
-  let files=[];
-  try{const r=await fetch('Post/posts.json');if(r.ok){const d=await r.json();files=d.posts||[];}}
-  catch{}
-  if(files.length===0){try{const dir=await fetch('Post/');if(dir.ok){const html=await dir.text();const doc=new DOMParser().parseFromString(html,'text/html');files=[...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')).filter(h=>h.endsWith('.txt'));}}catch{}
-  if(files.length===0){document.getElementById('list-container').innerHTML='<p style="text-align:center;">No posts found.</p>';return;}
-  files.forEach(f=>renderCard(f));
-}
+// LOAD POSTS
+document.addEventListener('DOMContentLoaded', loadPosts);
 
-function renderCard(file){
-  const card=document.createElement('div');card.className='post-card';const title=file.replace('.txt','');card.innerHTML=`<h3>${title}</h3><div class='post-content' id='c_${title.replace(/[^a-zA-Z0-9]/g,'')}'></div>`;card.addEventListener('click',()=>togglePost(card,file));document.getElementById('list-container').appendChild(card);
-}
+async function loadPosts() {
+  let files = [];
 
-async function togglePost(card,file){
-  if(card.classList.contains('active')){card.classList.remove('active');return;}
-  // collapse others
-  document.querySelectorAll('.post-card.active').forEach(c=>c.classList.remove('active'));
-  const contentDiv=card.querySelector('.post-content');
-  if(!contentDiv.dataset.loaded){
-    try{const txt=await (await fetch('Post/'+file)).text();contentDiv.textContent=txt;contentDiv.dataset.loaded=true;}catch(e){contentDiv.textContent='Failed to load content.';}
+  try {
+    const r = await fetch('Post/posts.json');
+    if (r.ok) {
+      const d = await r.json();
+      files = d.posts || [];
+    }
+  } catch (error) {
+    console.error('Error loading posts.json:', error);
   }
+
+  if (!files.length) {
+    document.getElementById('list-container').innerHTML = '<p style=\"text-align:center;\">No posts found (empty list).</p>';
+    return;
+  }
+
+  files.forEach(file => {
+    fetch('Post/' + file)
+      .then(response => {
+        if (response.ok) {
+          renderCard(file);
+        } else {
+          console.warn('Skipping missing post:', file);
+        }
+      })
+      .catch(err => console.error('Error fetching post file:', file, err));
+  });
+}
+
+function renderCard(file) {
+  const card = document.createElement('div');
+  card.className = 'post-card';
+  const title = file.replace('.txt', '');
+  card.innerHTML = `<h3>${title}</h3><div class='post-content'></div>`;
+  card.addEventListener('click', () => togglePost(card, file));
+  document.getElementById('list-container').appendChild(card);
+}
+
+async function togglePost(card, file) {
+  if (card.classList.contains('active')) {
+    card.classList.remove('active');
+    return;
+  }
+
+  document.querySelectorAll('.post-card.active').forEach(c => c.classList.remove('active'));
+  const contentDiv = card.querySelector('.post-content');
+
+  if (!contentDiv.dataset.loaded) {
+    try {
+      const txt = await (await fetch('Post/' + file)).text();
+      contentDiv.textContent = txt;
+      contentDiv.dataset.loaded = true;
+    } catch (error) {
+      contentDiv.textContent = 'Failed to load content.';
+      console.error('Error loading post content:', file, error);
+    }
+  }
+
   card.classList.add('active');
 }
 </script>
