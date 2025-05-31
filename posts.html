@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TITAN Posts – Educational Arsenal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#00d4ff;--dark:#0e0e0e;--card:#181818;}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--dark);color:#fff;overflow-x:hidden;}
+
+header{position:fixed;top:0;width:100%;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;background:rgba(14,14,14,.55);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.05);z-index:1000;}
+header h1{font-size:1.6rem;font-weight:800;letter-spacing:1px;}
+nav a{margin-left:24px;color:#fff;text-decoration:none;font-weight:600;position:relative;transition:.3s;}
+nav a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--accent);transition:.3s;}
+nav a:hover{color:var(--accent);}nav a:hover::after{width:100%;}
+
+section{padding:120px 20px 80px;}
+#postslist h2{font-size:2.6rem;font-weight:800;text-align:center;margin-bottom:50px;}
+.post-card{max-width:800px;margin:0 auto 22px;background:var(--card);padding:26px 34px;border-radius:24px;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.4);transition:.35s ease;}
+.post-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 12px 30px rgba(0,212,255,.15);} 
+.post-card h3{margin:0;font-size:1.6rem;color:var(--accent);} 
+.post-content{margin-top:18px;font-size:.95rem;line-height:1.6;display:none;white-space:pre-wrap;} 
+.post-card.active .post-content{display:block;animation:fadeIn .5s forwards;} 
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;color:#777;}
+</style>
+</head>
+<body>
+<header>
+  <h1>TITAN POSTS</h1>
+  <nav>
+    <a href="index.html">Home</a>
+  </nav>
+</header>
+
+<section id="postslist">
+  <h2>Educational Arsenal</h2>
+  <div id="list-container"></div>
+</section>
+
+<footer>© <span id="year"></span> Titan Service. All rights reserved.</footer>
+
+<script>
+// YEAR
+document.getElementById('year').textContent=new Date().getFullYear();
+
+// LIST POSTS
+document.addEventListener('DOMContentLoaded',loadPosts);
+async function loadPosts(){
+  let files=[];
+  try{const r=await fetch('Post/posts.json');if(r.ok){const d=await r.json();files=d.posts||[];}}
+  catch{}
+  if(files.length===0){try{const dir=await fetch('Post/');if(dir.ok){const html=await dir.text();const doc=new DOMParser().parseFromString(html,'text/html');files=[...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')).filter(h=>h.endsWith('.txt'));}}catch{}
+  if(files.length===0){document.getElementById('list-container').innerHTML='<p style="text-align:center;">No posts found.</p>';return;}
+  files.forEach(f=>renderCard(f));
+}
+
+function renderCard(file){
+  const card=document.createElement('div');card.className='post-card';const title=file.replace('.txt','');card.innerHTML=`<h3>${title}</h3><div class='post-content' id='c_${title.replace(/[^a-zA-Z0-9]/g,'')}'></div>`;card.addEventListener('click',()=>togglePost(card,file));document.getElementById('list-container').appendChild(card);
+}
+
+async function togglePost(card,file){
+  if(card.classList.contains('active')){card.classList.remove('active');return;}
+  // collapse others
+  document.querySelectorAll('.post-card.active').forEach(c=>c.classList.remove('active'));
+  const contentDiv=card.querySelector('.post-content');
+  if(!contentDiv.dataset.loaded){
+    try{const txt=await (await fetch('Post/'+file)).text();contentDiv.textContent=txt;contentDiv.dataset.loaded=true;}catch(e){contentDiv.textContent='Failed to load content.';}
+  }
+  card.classList.add('active');
+}
+</script>
+</body>
+</html>
