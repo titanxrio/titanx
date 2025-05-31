@@ -1,1 +1,101 @@
-hello this is the first post!
+Introduction
+Nmap (Network Mapper) is one of the most powerful and versatile open-source tools for network scanning, host discovery, and security auditing. Developed by Gordon Lyon (aka Fyodor), it has become a core utility in every penetration tester’s toolkit.
+
+This post summarizes the **comprehensive 85+ page Arabic guide** from Green Armor Cyber Security, now distilled into an essential reference for the H.T.Dark community.
+
+Key Capabilities of Nmap:
+Host Discovery: Identify live systems on a network.
+Port Scanning: Detect open, closed, or filtered ports.
+Service Detection: Determine running services and their versions.
+OS Detection: Identify target operating systems via TCP/IP fingerprinting.
+Scriptable Scanning: Use Lua-based NSE scripts for advanced probing.
+Firewall/IDS Evasion: Employ decoys, spoofing, fragmentation, etc.
+
+Essential Commands Summary:
+Bash:
+# Basic host scan
+nmap 192.168.1.1
+
+# Range scan
+nmap 192.168.1.1-254
+
+# Subnet scan
+nmap 192.168.1.0/24
+
+# Full port scan
+nmap -p- 192.168.1.1
+
+# Aggressive scan (OS + Services + Scripts + Traceroute)
+nmap -A target.com
+
+# Stealth SYN scan
+nmap -sS target.com
+
+# UDP scan
+nmap -sU target.com
+
+# Detect service versions
+nmap -sV target.com
+
+# Detect OS
+nmap -O target.com
+
+# Use NSE script
+nmap --script http-enum target.com
+
+# Top 100 ports
+nmap -F target.com
+
+# Output in all formats
+nmap -oA scan_output target.com
+
+Firewall Evasion & IDS Bypass Techniques:
+Bash:
+# Fragment packets
+nmap -f target.com
+
+# Use decoy IPs
+nmap -D RND:5 target.com
+
+# Spoof MAC address
+nmap --spoof-mac Apple target.com
+
+# Randomize scan order
+nmap -r target.com
+
+# Slow timing (to avoid detection)
+nmap -T1 target.com
+
+NSE (Nmap Scripting Engine): Advanced Usage
+The NSE allows you to automate tasks like brute force attacks, service enumeration, and vulnerability detection.
+Bash:
+# Run all vulnerability scripts
+nmap --script vuln target.com
+
+# Run multiple scripts
+nmap --script=ssh-auth-methods,http-enum target.com
+
+# Provide script arguments
+nmap --script http-brute --script-args userdb=users.txt,passdb=pass.txt target.com
+
+Scan Timing Templates:
+Code:
+-T0: Paranoid (very slow, stealthy)
+-T1: Sneaky
+-T2: Polite
+-T3: Normal (default)
+-T4: Aggressive
+-T5: Insane (fast, noisy)
+
+Use Cases in Cybersecurity:
+Asset inventory and mapping.
+Vulnerability discovery via version detection and NSE scripts.
+Pre-engagement reconnaissance in Red Team operations.
+Firewall rule assessment and evasion.
+Incident response and breach analysis (IR & DFIR).
+
+Legal & Ethical Considerations:
+Never scan systems you do not own or lack explicit permission to test. Unauthorized scans can be illegal and lead to criminal prosecution depending on the jurisdiction.
+
+🎯 Conclusion
+Nmap remains a cornerstone tool in cybersecurity operations. With a rich set of commands, evasion techniques, and automation via NSE, it empowers red teamers, sysadmins, and blue teams alike.
