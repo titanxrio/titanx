@@ -1,0 +1,61 @@
+1️⃣ Kerberoasting Attack: Silent Takeover of Service Accounts
+✅ How It Works:
+⏺ Attackers extract TGS (Ticket Granting Service) tickets from service accounts.
+⏺ Crack them using tools like Hashcat.
+⏺ If the password is weak, they escalate privileges easily.
+
+💥 Defense:
+⏺ Use gMSA to automatically rotate service account passwords.
+⏺ Monitor SPNs (Service Principal Names) for unusual activity.
+⏺ Enforce long and complex passwords for service accounts.
+
+
+2️⃣ DCSync Attack: Stealing the Entire AD Database
+✅ How It Works:
+⏺ Attackers exploit Replicator Directory Changes privileges to extract NTDS.dit.
+⏺ Gain access to all user hashes and full network control.
+
+💥 Defense:
+⏺ Limit accounts with replication permissions.
+⏺ Enable LSA Protection to block hash dumping.
+⏺ Encrypt LDAP traffic to prevent sniffing.
+
+
+3️⃣ CVE-2025-21293: Privilege Escalation via Network Operators
+✅ How It Works:
+⏺ Users in the Network Configuration Operators group can modify registry keys for services like DnsCache and NetBT.
+⏺ Allows malicious code execution with SYSTEM privileges.
+
+💥 Defense:
+⏺ Patch all systems immediately.
+⏺ Audit and clean up the Network Operators group.
+⏺ Use Sysmon to monitor registry changes.
+
+
+4️⃣ Golden Ticket & Silver Ticket: Fake Kerberos Tickets, Real Control
+✅ How It Works:
+⏺ Golden Ticket: A forged Kerberos ticket using the KRBTGT account for domain-wide access.
+⏺ Silver Ticket: A forged ticket for a specific service (e.g., SQL Server), harder to detect.
+
+💥 Defense:
+⏺ Rotate the KRBTGT key every 180 days.
+⏺ Monitor Kerberos traffic with Microsoft ATA.
+⏺ Disable RC4-HMAC and use AES-256 instead.
+
+
+5️⃣ MITM6 Attack: IPv6-Based Man-in-the-Middle
+✅ How It Works:
+⏺ Exploits the default IPv6 enablement in Windows to launch MITM attacks and steal credentials.
+
+💥 Defense:
+⏺ Disable IPv6 if unused.
+⏺ Enable RA Guard and DHCPv6 Guard on switches.
+⏺ Enforce SMB Signing to prevent relay attacks.
+
+
+✅ Proactive Defense Strategies:
+⏺ Apply the "Least Privilege" principle across all accounts.
+⏺ Disable legacy protocols like NTLM and SMBv1.
+⏺ Enforce MFA for privileged accounts.
+⏺ Keep isolated and restorable backups of NTDS.dit.
+⏺ Use tools like BloodHound to uncover hidden attack paths.
