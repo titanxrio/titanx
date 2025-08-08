@@ -3,465 +3,195 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TITAN — Offensive Security & Code</title>
-  <meta name="description" content="TITAN — Offensive security, Python tooling, Discord automation, RF/SDR and hacker hardware." />
+  <title>Under Construction</title>
+  <meta name="description" content="Site under construction" />
   <style>
-    :root{
-      --bg:#0a0a0d;
-      --bg-2:#0e0e14;
-      --fg:#e9e9f1;
-      --muted:#8b8b99;
-      --acc-1:#7b00ff;   /* neon purple */
-      --acc-2:#00ffb3;   /* neon mint */
-      --card:#111118;
-      --line:#171724;
-      --glow: drop-shadow(0 0 18px rgba(123,0,255,.45)) drop-shadow(0 0 8px rgba(0,255,179,.25));
+    :root {
+      --bg: #0b0f14;
+      --fg: #e8f1ff;
+      --muted: #9aa7b3;
+      --accent: #6cf0ff;
+      --accent2: #7b5cff;
+      --glow: 0 0 24px rgba(108,240,255,.55), 0 0 64px rgba(123,92,255,.35);
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background: radial-gradient(1200px 600px at 10% 0%, #0d0d13 0%, var(--bg) 40%, #07070a 100%), var(--bg);
-      color:var(--fg); font: 500 16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
-      overflow-x:hidden;
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--fg);
+      background: radial-gradient(1200px 800px at 80% -20%, rgba(123,92,255,.12), transparent 60%),
+                  radial-gradient(1000px 700px at -10% 120%, rgba(108,240,255,.10), transparent 60%),
+                  #0b0f14;
+      overflow: hidden;
     }
 
-    /* subtle scanlines + noise vibe */
-    body::before{
-      content:""; position:fixed; inset:0; pointer-events:none; z-index:1;
-      background:
-        repeating-linear-gradient(to bottom, rgba(255,255,255,.02), rgba(255,255,255,.02) 1px, transparent 2px, transparent 4px),
-        radial-gradient(1200px 400px at 80% -10%, rgba(123,0,255,.12), transparent 60%),
-        radial-gradient(900px 300px at 10% 110%, rgba(0,255,179,.08), transparent 60%);
-      mix-blend-mode:screen;
+    /* Subtle animated grid */
+    .grid {
+      position: fixed; inset: 0; pointer-events: none; opacity: .15; mix-blend-mode: screen;
+      background-image: linear-gradient(to right, rgba(124,124,124,.15) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(124,124,124,.15) 1px, transparent 1px);
+      background-size: 40px 40px;
+      transform: perspective(800px) rotateX(55deg) translateY(-15%);
+      animation: drift 20s linear infinite;
+    }
+    @keyframes drift { to { background-position: 0 40px, 40px 0; } }
+
+    .wrap {
+      position: relative; height: 100%; display: grid; place-items: center; padding: 4rem 1.25rem;
+      isolation: isolate;
     }
 
-    a{color:inherit; text-decoration:none}
-
-    /* ------- NAV (hidden until scroll) ------- */
-    .nav {
-      position:fixed; top:18px; left:50%; transform:translateX(-50%);
-      background:rgba(17,17,24,.55); border:1px solid var(--line); border-radius:14px;
-      padding:10px 14px; display:flex; gap:10px; z-index:10; backdrop-filter: blur(6px);
-      opacity:0; visibility:hidden; transition: .4s ease;
-    }
-    .nav.show{opacity:1; visibility:visible; transform:translateX(-50%) translateY(0)}
-    .nav a{
-      padding:8px 12px; border-radius:10px; color:var(--muted); border:1px solid transparent;
-    }
-    .nav a.active, .nav a:hover{
-      color:var(--fg); border-color:#25253a; background:linear-gradient(180deg, #12121a, #0e0e15);
-      filter:var(--glow);
+    .card {
+      position: relative; width: min(920px, 92vw); padding: 3.5rem 2.25rem; border-radius: 28px;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.05);
     }
 
-    /* ------- HERO ------- */
-    .hero{
-      min-height:100svh; display:grid; place-items:center; position:relative;
-      isolation:isolate;
+    /* Neon border */
+    .card::before { content:""; position:absolute; inset:-1px; border-radius:28px; padding:1px;
+      background: conic-gradient(from 120deg, var(--accent), transparent 25%, var(--accent2), transparent 50%, var(--accent), transparent 75%, var(--accent2));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      filter: blur(10px) saturate(120%);
+      animation: spin 8s linear infinite;
     }
-    .glitch{
-      font-weight:800; letter-spacing:.08em; text-transform:uppercase; text-align:center;
-      font-size: clamp(36px, 9vw, 120px);
-      line-height: .95;
-      position:relative; display:inline-block;
-      filter:var(--glow);
-    }
-    .glitch::before,
-    .glitch::after{
-      content:attr(data-text); position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
-    }
-    .glitch::before{ transform:translate(2px,0); color:var(--acc-1); clip-path: polygon(0 0, 100% 0, 100% 48%, 0 52%); }
-    .glitch::after{ transform:translate(-2px,0); color:var(--acc-2); clip-path: polygon(0 48%, 100% 52%, 100% 100%, 0 100%); }
-    @keyframes glitchShift{
-      0%,100%{ transform:translate(0,0) }
-      20%{ transform:translate(2px,-1px) }
-      40%{ transform:translate(-2px,1px) }
-      60%{ transform:translate(1px,0) }
-      80%{ transform:translate(-1px,0) }
-    }
-    .glitch, .glitch::before, .glitch::after{ animation:glitchShift 2.4s infinite cubic-bezier(.17,.67,.36,1) }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .scroll-cue{
-      position:absolute; bottom:42px; left:50%; transform:translateX(-50%); color:var(--muted);
-      font-size:14px; letter-spacing:.3em; text-transform:uppercase; opacity:.85;
-    }
-    .scroll-dot{ width:2px; height:28px; background:linear-gradient(var(--acc-2), transparent); margin:10px auto 0; border-radius:2px; animation:drop 1.6s infinite }
-    @keyframes drop{ 0%{opacity:0; transform:translateY(-8px)} 30%{opacity:1} 100%{opacity:0; transform:translateY(16px)} }
-
-    /* ------- SECTIONS ------- */
-    section{
-      padding: clamp(64px, 8vw, 120px) 20px; position:relative;
-    }
-    .container{ max-width:1200px; margin:0 auto }
-    .section-title{
-      font-size: clamp(24px, 4.2vw, 54px); line-height:1.05; margin:0 0 24px;
-      font-weight:800; letter-spacing:.02em;
-    }
-    .kicker{ color:var(--acc-2); font-weight:700; letter-spacing:.25em; text-transform:uppercase; font-size:12px }
-
-    .accent{
-      position:absolute; inset:0; pointer-events:none;
-      background:
-        radial-gradient(500px 140px at 15% 20%, rgba(123,0,255,.15), transparent 60%),
-        radial-gradient(600px 160px at 90% 60%, rgba(0,255,179,.12), transparent 65%);
-      z-index:-1;
+    .badge {
+      display:inline-flex; align-items:center; gap:.5rem; padding: .45rem .8rem; border-radius: 999px;
+      background: rgba(108,240,255,.08); color: var(--accent); border: 1px solid rgba(108,240,255,.35);
+      text-transform: uppercase; font-weight: 700; letter-spacing: .12em; font-size: .72rem;
+      box-shadow: var(--glow);
     }
 
-    /* cards/grid */
-    .grid{ display:grid; gap:18px; grid-template-columns:repeat(12,1fr) }
-    .card{
-      grid-column: span 12; background:linear-gradient(180deg, #0f0f16, #0b0b12);
-      border:1px solid #1a1a28; border-radius:16px; padding:24px; position:relative; overflow:hidden;
-      transition: transform .25s ease, border-color .25s ease, background .25s ease;
-    }
-    .card:hover{ transform:translateY(-2px); border-color:#26263a }
-    .card h3{ margin:0 0 10px; font-size:22px }
-    .card p{ margin:0; color:#b7b7c5 }
-    .card .tag{
-      display:inline-block; padding:6px 10px; border:1px solid #232338; border-radius:999px; font-size:12px;
-      color:#cfd; margin:0 6px 8px 0; background:rgba(0,255,179,.05)
-    }
-    .card .tag.p{ color:#dec7ff; background:rgba(123,0,255,.08) }
-
-    /* images */
-    .hardware{
-      display:flex; gap:22px; flex-wrap:wrap; align-items:stretch;
-    }
-    .imgBox{
-      flex:1 1 280px; background:#0b0b12; border:1px solid #1a1a28; border-radius:16px; padding:14px;
-      display:flex; align-items:center; justify-content:center; min-height:220px; overflow:hidden;
-      position:relative;
-    }
-    .imgBox img{ max-width:100%; max-height:180px; filter: drop-shadow(0 10px 40px rgba(0,255,179,.18)) }
-    .imgBox .label{
-      position:absolute; bottom:10px; left:10px; font-size:12px; color:#a6ffd9; opacity:.9; letter-spacing:.15em;
-      background:rgba(0,255,179,.06); padding:6px 10px; border:1px solid #223; border-radius:999px
+    .title {
+      margin: 1.1rem 0 .5rem; font-size: clamp(2.2rem, 6vw, 4.4rem); font-weight: 900; line-height: 1.02;
+      letter-spacing: .02em; text-align: center;
     }
 
-    /* columns */
-    .two-col{ display:grid; gap:26px; grid-template-columns:repeat(12,1fr) }
-    .two-col > .left { grid-column: span 7 }
-    .two-col > .right{ grid-column: span 5 }
-    @media (max-width:980px){
-      .two-col > .left, .two-col > .right{ grid-column: span 12 }
+    /* Glitch effect */
+    .glitch { position: relative; display:inline-block; }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+    }
+    .glitch::before { transform: translate(1px,-1px); clip-path: inset(0 0 60% 0); color: var(--accent); filter: drop-shadow(0 0 8px rgba(108,240,255,.9)); }
+    .glitch::after  { transform: translate(-1px,1px); clip-path: inset(40% 0 0 0); color: var(--accent2); filter: drop-shadow(0 0 8px rgba(123,92,255,.9)); }
+    .glitch { animation: jitter 2.2s infinite steps(1); }
+    @keyframes jitter {
+      0%, 96%, 100% { transform: none; }
+      10% { transform: skew(-0.3deg); }
+      20% { transform: translateX(0.6px); }
+      32% { transform: translateX(-0.6px) skewY(.2deg); }
+      45% { transform: translateY(0.6px); }
+      58% { transform: translateX(.4px); }
+      72% { transform: translateX(-.4px); }
+      86% { transform: translateY(-.4px); }
     }
 
-    /* reveal on scroll */
-    .reveal{ opacity:0; transform:translateY(24px); transition: .7s ease }
-    .reveal.visible{ opacity:1; transform:none }
-    .delay-1{ transition-delay:.08s } .delay-2{ transition-delay:.16s } .delay-3{ transition-delay:.24s } .delay-4{ transition-delay:.32s }
+    .desc { margin: .2rem auto 1.6rem; text-align:center; color: var(--muted); font-size: clamp(.98rem, 2.2vw, 1.06rem); max-width: 62ch; }
 
-    /* progress bar */
-    .progress{
-      position:fixed; top:0; left:0; height:3px; width:0%;
-      background:linear-gradient(90deg, var(--acc-1), var(--acc-2)); z-index:20; box-shadow:0 0 24px rgba(123,0,255,.6);
+    .cta-row { display:flex; gap:.75rem; justify-content:center; flex-wrap:wrap; margin-top: 1.2rem; }
+
+    .btn { --ring: rgba(108,240,255,.55); position:relative; display:inline-flex; align-items:center; gap:.6rem; padding:.85rem 1.1rem; border-radius: 14px; font-weight:700; border:1px solid rgba(255,255,255,.12); text-decoration:none; color:var(--fg); background: rgba(255,255,255,.06); }
+    .btn:focus-visible { outline: none; box-shadow: 0 0 0 6px var(--ring); }
+
+    .btn.primary {
+      background: radial-gradient(120% 140% at 20% 20%, rgba(108,240,255,.18), transparent),
+                  linear-gradient(180deg, rgba(108,240,255,.22), rgba(123,92,255,.18));
+      border-color: rgba(108,240,255,.45);
+      box-shadow: var(--glow);
     }
 
-    /* footer/contact */
-    .cta{
-      display:flex; gap:16px; flex-wrap:wrap; align-items:center;
-    }
-    .btn{
-      display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; font-weight:700;
-      border:1px solid #26263a; background:linear-gradient(180deg,#12121b,#0e0e15); cursor:pointer;
-      transition:.25s ease; letter-spacing:.04em; text-transform:uppercase; font-size:13px;
-    }
-    .btn:hover{ transform:translateY(-1px); filter:var(--glow) }
-    .pfp{ width:56px; height:56px; border-radius:12px; object-fit:cover; border:1px solid #26263a }
+    .hint { margin-top:1.4rem; text-align:center; color: var(--muted); font-size: .9rem; }
 
-    /* subtle separators */
-    .sep{ height:1px; background:linear-gradient(90deg, transparent, #1a1a28, transparent); margin:26px 0 }
+    /* Floating particles */
+    .particles { position: fixed; inset: 0; pointer-events:none; }
+    .dot { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: white; opacity: .6; filter: blur(.2px); animation: float var(--dur) linear infinite; }
+    @keyframes float { to { transform: translateY(-110vh) translateX(var(--x)); opacity: 0; } }
 
-    /* accessibility */
-    @media (prefers-reduced-motion: reduce){
-      .glitch, .glitch::before, .glitch::after{ animation:none }
-      .reveal{ transition:none }
-      .scroll-dot{ animation:none }
+    /* Footer credit */
+    .foot { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: .75rem; color: #7c8a97; opacity: .8; letter-spacing:.02em; }
+
+    /* Responsive tweaks */
+    @media (max-width: 420px) {
+      .card { padding: 2.2rem 1.25rem; }
+      .cta-row { gap: .55rem; }
     }
   </style>
 </head>
 <body>
-  <div class="progress" id="progress"></div>
+  <div class="grid" aria-hidden="true"></div>
+  <div class="particles" aria-hidden="true" id="particles"></div>
 
-  <!-- NAV (appears after you leave the hero) -->
-  <nav class="nav" id="nav">
-    <a href="#about"   data-link>About</a>
-    <a href="#offsec"  data-link>Offensive Security</a>
-    <a href="#hardware" data-link>Hardware</a>
-    <a href="#coding"  data-link>Coding & Tools</a>
-    <a href="#discord" data-link>Discord Automation</a>
-    <a href="#contact" data-link>Contact</a>
-  </nav>
-
-  <!-- HERO: Only Welcome text -->
-  <header class="hero" id="hero" aria-label="Welcome">
-    <div class="accent"></div>
-    <h1 class="glitch" data-text="WELCOME TO TITAN">WELCOME TO TITAN</h1>
-    <div class="scroll-cue" aria-hidden="true">SCROLL</div>
-    <div class="scroll-dot" aria-hidden="true"></div>
-  </header>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="container">
-      <div class="kicker reveal">Portfolio</div>
-      <h2 class="section-title reveal delay-1">What I do</h2>
-      <p class="reveal delay-2" style="max-width:860px;color:#c5c5d6">
-        I build, break, and automate. I live in the overlap of <b>offensive security</b>,
-        <b>Python engineering</b>, and <b>Discord automation</b>. Expect clean code, fast iteration,
-        and hardware-level curiosity. Scroll — it gets deeper.
-      </p>
-      <div class="sep reveal delay-3"></div>
-    </div>
-  </section>
-
-  <!-- OFFENSIVE SECURITY (dominant section) -->
-  <section id="offsec">
-    <div class="accent"></div>
-    <div class="container two-col">
-      <div class="left">
-        <div class="kicker reveal">Core Focus</div>
-        <h2 class="section-title reveal delay-1">Offensive Security</h2>
-        <div class="grid">
-          <div class="card reveal delay-1" style="grid-column:span 12">
-            <h3>Recon → Exploit → Report</h3>
-            <p>
-              Targeted recon, custom payloads, reproducible exploit chains, and tight write-ups.
-            </p>
-          </div>
-          <div class="card reveal delay-2" style="grid-column:span 6">
-            <span class="tag">Web</span><span class="tag">AppSec</span><span class="tag p">Red Team</span>
-            <h3>Web & App Targets</h3>
-            <p>Auth bypass, logic flaws, misconfig, IDOR, SSRF, CSRF, XSS (stored/reflected), deserialization paths, and chained impact.</p>
-          </div>
-          <div class="card reveal delay-3" style="grid-column:span 6">
-            <span class="tag">Network</span><span class="tag">Cloud</span><span class="tag p">Ops</span>
-            <h3>Infra & Cloud</h3>
-            <p>AD mischief (lab), credential paths, privilege escalation, IaC drift, and attack-path mapping with crisp remediation.</p>
-          </div>
-          <div class="card reveal delay-4" style="grid-column:span 12">
-            <span class="tag p">Custom</span><span class="tag">BadUSB</span><span class="tag">RF</span>
-            <h3>Custom Tradecraft</h3>
-            <p>
-              I write <b>BadUSB</b> payloads, build quick implants, and craft auto injections for payloads,
-              without any trace.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="right">
-        <div class="card reveal delay-2">
-          <h3>Toolkit Snapshot</h3>
-          <p style="margin-bottom:12px">Lean stack, heavy impact:</p>
-          <ul style="margin:0 0 8px 18px; color:#b7b7c5">
-            <li>nmap, ffuf, nuclei, Burp, mitm, impacket</li>
-            <li>Python one-offs, payload gens, report helpers</li>
-            <li>RF/SDR capture & replay (lab), BLE sniffing</li>
-            <li>Discord-side simulations for abuse/raid scenarios</li>
-          </ul>
-        </div>
-        <div class="imgBox reveal delay-3" aria-hidden="true">
-          <img src="hackrf.png" alt="HackRF One with PortaPack (placeholder image)">
-          <span class="label">HackRF One + PortaPack</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HARDWARE -->
-  <section id="hardware">
-    <div class="container">
-      <div class="kicker reveal">Hardware Arsenal</div>
-      <h2 class="section-title reveal delay-1">Devices I Own & Use</h2>
-
-      <div class="hardware">
-        <div class="imgBox reveal delay-1">
-          <img src="flipper.png" alt="Flipper Zero (placeholder image)">
-          <span class="label">Flipper Zero</span>
-        </div>
-        <div class="imgBox reveal delay-2">
-          <img src="hackrf.png" alt="HackRF One (placeholder image)">
-          <span class="label">HackRF One + PortaPack</span>
-        </div>
+  <main class="wrap">
+    <section class="card">
+      <div style="display:flex; justify-content:center;">
+        <!-- Minimal logo (bolt) -->
+        <svg width="58" height="58" viewBox="0 0 24 24" role="img" aria-label="logo" style="filter: drop-shadow(0 0 12px rgba(108,240,255,.6));">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6cf0ff"/>
+              <stop offset="100%" stop-color="#7b5cff"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#g)" d="M13.5 2L4 14.2h6.5L9.5 22 20 9.8h-6.5L13.5 2z"/>
+        </svg>
       </div>
 
-      <div class="grid" style="margin-top:22px">
-        <div class="card reveal delay-2" style="grid-column:span 6">
-          <h3>Flipper Zero </h3>
-          <p>
-            I run a tuned Flipper setup with add-ons:
-            <b>IR Blaster</b> (add-on) and <b>WiFi Dev Board</b> (add-on).
-            I keep a private stash of <b>BadUSB</b> codes and write new ones on request<3
-          </p>
-        </div>
-        <div class="card reveal delay-3" style="grid-column:span 6">
-          <h3>SDR / RF Work</h3>
-          <p>
-            <b>HackRF One + PortaPack</b> for capture/analysis, replay testing, and signal fuzzing in controlled, isolated environments.
-            Also dabbling with BLE scans, sub-GHz experiments, and self-built probes when needed.
-          </p>
-        </div>
-        <div class="card reveal delay-4" style="grid-column:span 12">
-          <h3>M5Stick Plus 2 & Self-Builds</h3>
-          <p>
-            Quick UI sensors, PoC gadgets, and tiny automations. I like building exactly what the op needs,
-            then tossing it if it adds noise.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+      <h1 class="title">
+        <span class="glitch" data-text="UNDER CONSTRUCTION">UNDER CONSTRUCTION</span>
+      </h1>
 
-  <!-- CODING & TOOLS -->
-  <section id="coding">
-    <div class="accent"></div>
-    <div class="container two-col">
-      <div class="left">
-        <div class="kicker reveal">Engineering</div>
-        <h2 class="section-title reveal delay-1">Python & Custom Tools</h2>
-        <div class="grid">
-          <div class="card reveal delay-1" style="grid-column:span 12">
-            <span class="tag p">Python</span><span class="tag">CLI</span><span class="tag">Automation</span>
-            <h3>Clean & Practical</h3>
-            <p>
-              I keep the code tight: type-hints, clear structure, and logs you can trust. From scrapers to tiny
-              forensic helpers to operator dashboards — if it saves time, I build it.
-            </p>
-          </div>
-          <div class="card reveal delay-2" style="grid-column:span 6">
-            <h3>Data & Ops Glue</h3>
-            <p>ETL-ish scripts, schedulers, stateful caches, and file pipelines that turn “ugh” into one-click runs.</p>
-          </div>
-          <div class="card reveal delay-3" style="grid-column:span 6">
-            <h3>Reporting & Evidence</h3>
-            <p>Markdown → HTML/PDF pipelines, screenshots, and auto-collected context so fixes are obvious.</p>
-          </div>
-        </div>
-      </div>
-      <div class="right">
-        <div class="imgBox reveal delay-2">
-          <img src="python.png" alt="Python logo / project (placeholder image)">
-          <span class="label">Python-First</span>
-        </div>
-      </div>
-    </div>
-  </section>
+      <p class="desc">We’re crafting something clean, fast, and a little dangerous. Check back soon — the lights are warming up.</p>
 
-  <!-- DISCORD AUTOMATION -->
-  <section id="discord">
-    <div class="container">
-      <div class="kicker reveal">Automation</div>
-      <h2 class="section-title reveal delay-1">Discord Bots & Custom Tools</h2>
-      <div class="grid">
-        <div class="card reveal delay-1" style="grid-column:span 6">
-          <h3>Production Bots</h3>
-          <p>Verification, tickets, role flows, anti-spam, metrics, and admin QoL. Built for uptime and clarity.</p>
-        </div>
-        <div class="card reveal delay-2" style="grid-column:span 6">
-          <h3>Red-Team Simulations</h3>
-          <p>
-            Raid/nuke <em>simulators</em> (Discord-based) to pressure-test moderation. Controlled, permissioned, and logged —
-            the goal is resilience, not chaos.
-          </p>
-        </div>
-        <div class="card reveal delay-3" style="grid-column:span 12">
-          <h3>Plus Some Extras</h3>
-          <p>Scrapers, monitors, bulk ops, and integration bridges that keep the stack tidy without manual grind.</p>
-        </div>
+      <div style="display:flex; justify-content:center; margin:.6rem 0 1.1rem;">
+        <span class="badge">Status: building · v0</span>
       </div>
-    </div>
-  </section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="accent"></div>
-    <div class="container">
-      <div class="kicker reveal">Reach Out</div>
-      <h2 class="section-title reveal delay-1">Let’s Build</h2>
-      <p class="reveal delay-2" style="max-width:860px;color:#c5c5d6">
-        Want a focused offsec engagement, a custom Python tool, or a Discord automation that actually behaves?
-        Ping me below. I answer fast.
-      </p>
-
-      <div class="cta reveal delay-3" style="margin-top:18px">
-        <img class="pfp" src="profile.png" alt="Profile picture">
-        <a class="btn" href="https://discord.com/users/1380071939850113135" target="_blank" rel="noopener">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M20 7.5c-1.2-.9-2.6-1.6-4.1-1.9-.2.4-.4.8-.6 1.2-1.1-.2-2.2-.2-3.3 0-.2-.4-.4-.8-.6-1.2-1.5.3-2.9 1-4.1 1.9C4.9 11 4.3 14.4 4.5 17.7c1.7 1.3 3.5 2.1 5.3 2.6.4-.6.7-1.2.9-1.9-1.3-.4-2.6-1-3.7-1.9.3.2.6.4.9.6 2.2 1.3 4.7 1.7 7.1 1.1.3.6.6 1.2.9 1.8 1.9-.5 3.7-1.4 5.4-2.7.3-3.3-.4-6.7-2.2-10.1zM10 14.5c-.8 0-1.5-.7-1.5-1.5S9.2 11.5 10 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm4 0c-.8 0-1.5-.7-1.5-1.5S13.2 11.5 14 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5z" fill="currentColor"/>
-          </svg>
-          <span>Add on Discord</span>
-        </a>
+      <div class="cta-row">
+        <a class="btn primary" href="#" id="notifyLink">Notify me</a>
+        <a class="btn" href="#" id="contactLink">Contact</a>
       </div>
-      <div class="sep reveal delay-4"></div>
-      <p class="reveal delay-4" style="color:#8e8ea0;font-size:13px">
-        Note: All demonstrations and experiments are performed ethically in labs/VMs with permission.
-      </p>
-    </div>
-  </section>
+
+      <p class="hint">Want your logo or colors here? Drop them in and it’s done.</p>
+    </section>
+  </main>
+
+  <div class="foot">© <span id="year"></span> — Site in progress</div>
 
   <script>
-    // Progress bar
-    const progress = document.getElementById('progress');
-    const onScroll = () => {
-      const h = document.documentElement;
-      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
-      progress.style.width = (scrolled * 100) + '%';
-    };
-    document.addEventListener('scroll', onScroll, {passive:true});
-    onScroll();
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Reveal on scroll
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
-      });
-    }, { threshold:.14 });
-    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    // Particles
+    const p = document.getElementById('particles');
+    const count = Math.min(140, Math.floor((innerWidth * innerHeight) / 22000));
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement('span');
+      d.className = 'dot';
+      const left = Math.random() * 100; // vw
+      const size = Math.random() * 1.8 + 0.6;
+      const delay = Math.random() * 6;
+      const dur = Math.random() * 12 + 10;
+      d.style.left = left + 'vw';
+      d.style.bottom = (-Math.random() * 30) + 'vh';
+      d.style.width = d.style.height = size + 'px';
+      d.style.animationDelay = delay + 's';
+      d.style.setProperty('--dur', dur + 's');
+      d.style.setProperty('--x', (Math.random() * 40 - 20) + 'px');
+      p.appendChild(d);
+    }
 
-    // Show nav after leaving hero & highlight active link
-    const nav = document.getElementById('nav');
-    const hero = document.getElementById('hero');
-    const links = [...document.querySelectorAll('[data-link]')];
-    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-
-    const setActive = () => {
-      const y = window.scrollY + 120;
-      let idx = 0;
-      sections.forEach((sec, i)=>{
-        const top = sec.offsetTop;
-        if(y >= top) idx = i;
-      });
-      links.forEach((l,i)=> l.classList.toggle('active', i===idx));
-    };
-
-    const navToggle = () => {
-      const show = window.scrollY > (hero.offsetHeight * 0.6);
-      nav.classList.toggle('show', show);
-    };
-
-    document.addEventListener('scroll', ()=>{ setActive(); navToggle(); }, {passive:true});
-    navToggle(); setActive();
-
-    // Smooth scroll for in-page anchors
-    links.forEach(a=>{
-      a.addEventListener('click', (e)=>{
-        e.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
-        if(!target) return;
-        window.scrollTo({ top: target.offsetTop - 20, behavior:'smooth' });
-      });
-    });
-
-    // Tiny hover tilt on cards
-    document.querySelectorAll('.card').forEach(card=>{
-      card.addEventListener('mousemove', (e)=>{
-        const r = card.getBoundingClientRect();
-        const rx = ((e.clientY - r.top) / r.height - .5) * 4;
-        const ry = ((e.clientX - r.left) / r.width - .5) * -4;
-        card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
-      });
-      card.addEventListener('mouseleave', ()=> card.style.transform = '');
-    });
+    // Optional: replace links at runtime
+    // document.getElementById('notifyLink').href = 'mailto:you@example.com?subject=Notify%20me';
+    // document.getElementById('contactLink').href = 'https://discord.gg/yourInvite';
   </script>
 </body>
 </html>
