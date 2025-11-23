@@ -172,6 +172,123 @@
     /* subtle separators */
     .sep{ height:1px; background:linear-gradient(90deg, transparent, #1a1a28, transparent); margin:26px 0 }
 
+    /* PROJECTS SECTION STYLES */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    
+    .project-card {
+      background: linear-gradient(180deg, #0f0f16, #0b0b12);
+      border: 1px solid #1a1a28;
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .project-card:hover {
+      transform: translateY(-5px);
+      border-color: #26263a;
+      filter: var(--glow);
+    }
+    
+    .project-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 20px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border: 2px solid #1a1a28;
+    }
+    
+    .project-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+    
+    .project-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 15px;
+      font-weight: 600;
+    }
+    
+    .project-stats {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .stat {
+      background: rgba(0, 255, 179, 0.08);
+      padding: 8px 15px;
+      border-radius: 12px;
+      border: 1px solid #1a1a28;
+    }
+    
+    .stat-value {
+      font-weight: 700;
+      color: var(--acc-2);
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    .project-description {
+      color: #b7b7c5;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    .discord-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(180deg, #12121b, #0e0e15);
+      border: 1px solid #26263a;
+      border-radius: 50px;
+      color: var(--fg);
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .discord-btn:hover {
+      transform: translateY(-2px);
+      filter: var(--glow);
+    }
+    
+    .discord-icon {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .discontinued {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 50, 50, 0.1);
+      color: #ff5050;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 50, 50, 0.3);
+    }
+
     /* accessibility */
     @media (prefers-reduced-motion: reduce){
       .glitch, .glitch::before, .glitch::after{ animation:none }
@@ -190,6 +307,7 @@
     <a href="#hardware" data-link>Hardware</a>
     <a href="#coding"  data-link>Coding & Tools</a>
     <a href="#discord" data-link>Discord Automation</a>
+    <a href="#projects" data-link>Projects</a>
     <a href="#contact" data-link>Contact</a>
   </nav>
 
@@ -369,12 +487,111 @@
     </div>
   </section>
 
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="accent"></div>
+    <div class="container">
+      <div class="kicker reveal">My Work</div>
+      <h2 class="section-title reveal delay-1">PROJECTS</h2>
+      
+      <div class="project-grid">
+        <!-- ScamGuard -->
+        <div class="project-card reveal delay-1">
+          <div class="discontinued">DISCONTINUED</div>
+          <img src="scamguard.gif" alt="ScamGuard" class="project-image">
+          <h3 class="project-title">ScamGuard</h3>
+          <p class="project-subtitle">Vouch Bot</p>
+          <div class="project-stats">
+            <div class="stat">
+              <div class="stat-value">60+</div>
+              <div class="stat-label">Servers</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">7K+</div>
+              <div class="stat-label">Vouches</div>
+            </div>
+          </div>
+          <p class="project-description">
+            Advanced vouch bot with reputation tracking and scam prevention features.
+          </p>
+        </div>
+        
+        <!-- EuroTrade -->
+        <div class="project-card reveal delay-2">
+          <img src="eurotrade.png" alt="EuroTrade" class="project-image">
+          <h3 class="project-title">EuroTrade</h3>
+          <p class="project-subtitle">Exchange Bot</p>
+          <div class="project-stats">
+            <div class="stat">
+              <div class="stat-value">4K+</div>
+              <div class="stat-label">Exchanges</div>
+            </div>
+          </div>
+          <p class="project-description">
+            Automated exchange bot with secure trading and verification system.
+          </p>
+          <p class="project-description" style="color:var(--acc-2); font-weight:600; margin-top:10px;">
+            Now merged with ClearSwap
+          </p>
+        </div>
+        
+        <!-- ClearSwap -->
+        <div class="project-card reveal delay-3">
+          <img src="clearswap.gif" alt="ClearSwap" class="project-image">
+          <h3 class="project-title">ClearSwap</h3>
+          <p class="project-subtitle">Exchange Platform</p>
+          <div class="project-stats">
+            <div class="stat">
+              <div class="stat-value">37K+</div>
+              <div class="stat-label">Exchanges</div>
+            </div>
+          </div>
+          <p class="project-description">
+            Advanced trading platform combining all features from EuroTrade with enhanced security.
+          </p>
+          <a href="https://discord.gg/clearswap" target="_blank" class="discord-btn" style="margin-top:15px;">
+            <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 7.5c-1.2-.9-2.6-1.6-4.1-1.9-.2.4-.4.8-.6 1.2-1.1-.2-2.2-.2-3.3 0-.2-.4-.4-.8-.6-1.2-1.5.3-2.9 1-4.1 1.9C4.9 11 4.3 14.4 4.5 17.7c1.7 1.3 3.5 2.1 5.3 2.6.4-.6.7-1.2.9-1.9-1.3-.4-2.6-1-3.7-1.9.3.2.6.4.9.6 2.2 1.3 4.7 1.7 7.1 1.1.3.6.6 1.2.9 1.8 1.9-.5 3.7-1.4 5.4-2.7.3-3.3-.4-6.7-2.2-10.1zM10 14.5c-.8 0-1.5-.7-1.5-1.5S9.2 11.5 10 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm4 0c-.8 0-1.5-.7-1.5-1.5S13.2 11.5 14 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5z"/>
+            </svg>
+            Join ClearSwap
+          </a>
+        </div>
+        
+        <!-- Titan Service -->
+        <div class="project-card reveal delay-4">
+          <img src="titanservice.gif" alt="Titan Service" class="project-image">
+          <h3 class="project-title">Titan Service</h3>
+          <p class="project-subtitle">MAIN SERVER</p>
+          <div class="project-stats">
+            <div class="stat">
+              <div class="stat-value">Many</div>
+              <div class="stat-label">Tools</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">Active</div>
+              <div class="stat-label">Community</div>
+            </div>
+          </div>
+          <p class="project-description">
+            Main server offering many tools, resources, and a thriving community of security enthusiasts.
+          </p>
+          <a href="https://discord.gg/8k2QBaTKUA" target="_blank" class="discord-btn" style="margin-top:15px;">
+            <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 7.5c-1.2-.9-2.6-1.6-4.1-1.9-.2.4-.4.8-.6 1.2-1.1-.2-2.2-.2-3.3 0-.2-.4-.4-.8-.6-1.2-1.5.3-2.9 1-4.1 1.9C4.9 11 4.3 14.4 4.5 17.7c1.7 1.3 3.5 2.1 5.3 2.6.4-.6.7-1.2.9-1.9-1.3-.4-2.6-1-3.7-1.9.3.2.6.4.9.6 2.2 1.3 4.7 1.7 7.1 1.1.3.6.6 1.2.9 1.8 1.9-.5 3.7-1.4 5.4-2.7.3-3.3-.4-6.7-2.2-10.1zM10 14.5c-.8 0-1.5-.7-1.5-1.5S9.2 11.5 10 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm4 0c-.8 0-1.5-.7-1.5-1.5S13.2 11.5 14 11.5s1.5.7 1.5 1.5-.7 1.5-1.5 1.5z"/>
+            </svg>
+            Join Titan Service
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section id="contact">
     <div class="accent"></div>
     <div class="container">
       <div class="kicker reveal">Reach Out</div>
-      <h2 class="section-title reveal delay-1">Let’s Build</h2>
+      <h2 class="section-title reveal delay-1">Let's Build</h2>
       <p class="reveal delay-2" style="max-width:860px;color:#c5c5d6">
          Want to Build Something Big Together? or just talk? Dm me on Discord so we can get in Contact.
       </p>
